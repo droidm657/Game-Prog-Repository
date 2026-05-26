@@ -1205,7 +1205,7 @@ Light:
   m_Color: {r: 0.9433962, g: 0.9389686, b: 0.4227483, a: 1}
   m_Intensity: 250
   m_Range: 300
-  m_SpotAngle: 70
+  m_SpotAngle: 60
   m_InnerSpotAngle: 60
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
@@ -5279,6 +5279,9 @@ MonoBehaviour:
   walkSpeed: 8
   sprintSpeed: 15
   crouchSpeed: 4
+  walkNoiseRange: 5
+  sprintNoiseRange: 10
+  crouchNoiseRange: 1
   maxStamina: 6
   currentStamina: 0
   staminaDrain: 1
@@ -5290,6 +5293,7 @@ MonoBehaviour:
   normalHeight: 2
   crouchHeight: 0.5
   crouchTransitionSpeed: 8
+  isCrouching: 0
   bobSpeed: 12
   bobAmount: 0.15
 --- !u!114 &909777668
@@ -5435,18 +5439,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FlashlightSystem
   flashlightObject: {fileID: 247384502}
   flashlightLight: {fileID: 267842782}
+  toggleKey: 102
+  startEnabled: 1
   maxBattery: 100
-  currentBattery: 0
+  currentBattery: 100
   batteryDrainSpeed: 1
   lowBatteryThreshold: 20
   enableFlicker: 1
   minIntensity: 100
   maxIntensity: 120
   flickerSpeed: 0.05
-  enableRandomShutdowns: 1
-  shutdownChance: 0.002
-  shutdownDuration: 1.5
-  startupDelay: 0.3
+  enableFlashBurst: 1
+  requiredBatteryPercent: 1
+  batteryDrainFromBurst: 25
+  flashBurstIntensity: 1000
+  flashBurstDuration: 0.1
+  flashFadeDuration: 1
+  flashRange: 100
+  stunDuration: 10
+  flashCooldown: 10
+  canFlash: 1
 --- !u!1 &928388480
 GameObject:
   m_ObjectHideFlags: 0
@@ -5838,14 +5850,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterAI
   player: {fileID: 909777665}
+  flashlightSystem: {fileID: 909777671}
   patrolPoints:
   - {fileID: 1113594032}
   - {fileID: 1341609951}
   - {fileID: 1724759668}
-  detectionRange: 60
-  loseRange: 30
+  detectionRange: 90
+  flashlightDetectionRange: 300
+  flashlightDetectionDistance: 300
+  closeDetectionRange: 20
+  memoryDuration: 3
+  searchDuration: 3
+  fieldOfView: 90
+  crouchDetectionMultiplier: 0.4
+  walkingHearingDistance: 20
+  sprintHearingDistance: 30
+  crouchHearingDistance: 10
   patrolSpeed: 10
-  chaseSpeed: 30
+  chaseSpeed: 50
+  maxChaseSpeed: 12
+  chaseAcceleration: 0.5
+  searchSpeed: 20
+  minIdleTime: 1
+  maxIdleTime: 1
+  lookAroundSpeed: 1
+  stunDuration: 3
   audioSource: {fileID: 943797331}
   patrolGrowl: {fileID: 8300000, guid: 2ccaa6398f0ab9f4f82f7e8746fb830f, type: 3}
   screechClip: {fileID: 8300000, guid: 2e28ff4b378db8f40b98e1c3b95ede43, type: 3}
@@ -6750,11 +6779,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 5, y: 1, z: 6}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1113594032
 Transform:
@@ -6765,7 +6794,7 @@ Transform:
   m_GameObject: {fileID: 1113594030}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 58.29395, y: 4.32355, z: 55.30029}
+  m_LocalPosition: {x: 55.5, y: 4.32355, z: 55.30029}
   m_LocalScale: {x: 8.6112, y: 5.025, z: 5.5764003}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8631,11 +8660,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 5, y: 1, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1341609951
 Transform:
@@ -8646,7 +8675,7 @@ Transform:
   m_GameObject: {fileID: 1341609949}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 61.31, y: 3.5363002, z: 101}
+  m_LocalPosition: {x: 56.4, y: 3.5363002, z: 97.8}
   m_LocalScale: {x: 8.6112, y: 5.025, z: 5.5764003}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10572,11 +10601,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 5, y: 1, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &1724759668
 Transform:

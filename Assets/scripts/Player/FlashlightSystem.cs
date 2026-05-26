@@ -3,51 +3,78 @@ using System.Collections;
 
 public class FlashlightSystem : MonoBehaviour
 {
-    [Header("Flashlight")]
+    [Header("FLASHLIGHT REFERENCES")]
     public GameObject flashlightObject;
 
     public Light flashlightLight;
+
+    [Header("FLASHLIGHT SETTINGS")]
+    public KeyCode toggleKey = KeyCode.F;
+
+    public bool startEnabled = true;
 
     private bool isOn = true;
 
     private bool isBroken = false;
 
-    [Header("Battery")]
+    [Header("BATTERY SETTINGS")]
+    [Range(0, 100)]
     public float maxBattery = 100f;
 
-    public float currentBattery;
+    [Range(0, 100)]
+    public float currentBattery = 100f;
 
     public float batteryDrainSpeed = 5f;
 
     public float lowBatteryThreshold = 20f;
 
-    [Header("Flicker")]
+    [Header("FLICKER SETTINGS")]
     public bool enableFlicker = true;
 
     public float minIntensity = 5f;
+
     public float maxIntensity = 7f;
 
     public float flickerSpeed = 0.05f;
 
-    [Header("Random Shutdown")]
-    public bool enableRandomShutdowns = true;
+    [Header("FLASH BURST SETTINGS")]
+    public bool enableFlashBurst = true;
 
-    public float shutdownChance = 0.002f;
+    public float requiredBatteryPercent = 50f;
 
-    public float shutdownDuration = 1.5f;
+    public float batteryDrainFromBurst = 25f;
 
-    [Header("Startup Delay")]
-    public float startupDelay = 0.3f;
+    public float flashBurstIntensity = 300f;
+
+    public float flashBurstDuration = 1.5f;
+
+    public float flashFadeDuration = 1f;
+
+    public float flashRange = 8f;
+
+    public float stunDuration = 3f;
+
+    public float flashCooldown = 10f;
+
+    [Header("DEBUG")]
+    public bool canFlash = true;
+
+    private float normalIntensity;
 
     void Start()
     {
-        currentBattery = maxBattery;
+        isOn = startEnabled;
+
+        normalIntensity =
+            flashlightLight.intensity;
 
         SetFlashlight(isOn);
 
         if (enableFlicker)
         {
-            StartCoroutine(FlickerEffect());
+            StartCoroutine(
+                FlickerEffect()
+            );
         }
     }
 
@@ -56,37 +83,145 @@ public class FlashlightSystem : MonoBehaviour
         HandleInput();
 
         DrainBattery();
-
-        RandomShutdown();
     }
 
     void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        // TOGGLE FLASHLIGHT
+        if (Input.GetKeyDown(toggleKey))
         {
-            if (currentBattery > 0 && !isBroken)
+            if (currentBattery > 0 &&
+               !isBroken)
             {
-                if (isOn)
-                {
-                    isOn = false;
+                isOn = !isOn;
 
-                    SetFlashlight(false);
-                }
-                else
-                {
-                    StartCoroutine(TurnOnWithDelay());
-                }
+                SetFlashlight(isOn);
+            }
+        }
+
+        // LEFT CLICK FLASH BURST
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!enableFlashBurst)
+                return;
+
+            // Not enough battery
+            if (currentBattery <
+               requiredBatteryPercent)
+            {
+                Debug.Log(
+                    "Battery Too Low"
+                );
+
+                return;
+            }
+
+            if (canFlash &&
+               isOn &&
+               !isBroken)
+            {
+                StartCoroutine(
+                    FlashBurst()
+                );
             }
         }
     }
 
-    IEnumerator TurnOnWithDelay()
+    IEnumerator FlashBurst()
     {
-        yield return new WaitForSeconds(startupDelay);
+        canFlash = false;
 
-        isOn = true;
+        // Drain battery amount
+        currentBattery -=
+            batteryDrainFromBurst;
 
-        SetFlashlight(true);
+        currentBattery =
+            Mathf.Clamp(
+                currentBattery,
+                0,
+                maxBattery
+            );
+
+        // Disable flashlight temporarily
+        isBroken = true;
+
+        // Save current intensity
+        float previousIntensity =
+            flashlightLight.intensity;
+
+        // HUGE FLASH
+        flashlightLight.intensity =
+            flashBurstIntensity;
+
+        // Detect nearby monsters
+        Collider[] hits =
+            Physics.OverlapSphere(
+                transform.position,
+                flashRange
+            );
+
+        foreach (Collider hit in hits)
+        {
+            MonsterAI monster =
+                hit.GetComponent<MonsterAI>();
+
+            if (monster != null)
+            {
+                monster.StunMonster(
+                    stunDuration
+                );
+            }
+        }
+
+        // HOLD FLASH
+        yield return new WaitForSeconds(
+            flashBurstDuration
+        );
+
+        // FADE FLASH
+        float timer = 0f;
+
+        while (timer < flashFadeDuration)
+        {
+            timer += Time.deltaTime;
+
+            flashlightLight.intensity =
+                Mathf.Lerp(
+                    flashBurstIntensity,
+                    previousIntensity,
+                    timer / flashFadeDuration
+                );
+
+            yield return null;
+        }
+
+        flashlightLight.intensity =
+            previousIntensity;
+
+        // QUICK UNEQUIP
+        flashlightObject.SetActive(false);
+
+        flashlightLight.enabled = false;
+
+        isOn = false;
+
+        Debug.Log(
+            "Flashlight Cooling Down..."
+        );
+
+        // COOLDOWN
+        yield return new WaitForSeconds(
+            flashCooldown
+        );
+
+        // FLASHLIGHT READY AGAIN
+        isBroken = false;
+
+        canFlash = true;
+
+        Debug.Log(
+            "Flashlight Ready"
+        );
     }
 
     void DrainBattery()
@@ -104,7 +239,7 @@ public class FlashlightSystem : MonoBehaviour
                     maxBattery
                 );
 
-            // Battery dead
+            // DEAD BATTERY
             if (currentBattery <= 0)
             {
                 currentBattery = 0;
@@ -114,37 +249,6 @@ public class FlashlightSystem : MonoBehaviour
                 SetFlashlight(false);
             }
         }
-    }
-
-    void RandomShutdown()
-    {
-        if (enableRandomShutdowns &&
-           isOn &&
-           currentBattery < lowBatteryThreshold)
-        {
-            if (Random.value < shutdownChance)
-            {
-                StartCoroutine(TemporaryShutdown());
-            }
-        }
-    }
-
-    IEnumerator TemporaryShutdown()
-    {
-        isBroken = true;
-
-        SetFlashlight(false);
-
-        yield return new WaitForSeconds(
-            shutdownDuration
-        );
-
-        if (currentBattery > 0)
-        {
-            SetFlashlight(true);
-        }
-
-        isBroken = false;
     }
 
     void SetFlashlight(bool state)
@@ -160,8 +264,9 @@ public class FlashlightSystem : MonoBehaviour
         {
             if (isOn)
             {
-                // Stronger flicker on low battery
-                if (currentBattery < lowBatteryThreshold)
+                // LOW BATTERY FLICKER
+                if (currentBattery <
+                   lowBatteryThreshold)
                 {
                     flashlightLight.intensity =
                         Random.Range(2f, 6f);

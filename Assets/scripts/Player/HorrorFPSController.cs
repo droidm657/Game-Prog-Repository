@@ -4,16 +4,27 @@ public class HorrorFPSController : MonoBehaviour
 {
     [Header("Movement")]
     public float walkSpeed = 4f;
+
     public float sprintSpeed = 7f;
+
     public float crouchSpeed = 2f;
 
     private float currentSpeed;
 
+    [Header("Noise")]
+    public float walkNoiseRange = 30f;
+
+    public float sprintNoiseRange = 50f;
+
+    public float crouchNoiseRange = 5f;
+
     [Header("Stamina")]
     public float maxStamina = 100f;
+
     public float currentStamina;
 
     public float staminaDrain = 20f;
+
     public float staminaRecovery = 15f;
 
     public float sprintCooldown = 1f;
@@ -34,13 +45,17 @@ public class HorrorFPSController : MonoBehaviour
 
     [Header("Crouch")]
     public float normalHeight = 2f;
+
     public float crouchHeight = 1f;
+
     public float crouchTransitionSpeed = 8f;
 
-    private bool isCrouching;
+    [HideInInspector]
+    public bool isCrouching;
 
     [Header("Head Bobbing")]
     public float bobSpeed = 10f;
+
     public float bobAmount = 0.05f;
 
     private float bobTimer;
@@ -53,23 +68,32 @@ public class HorrorFPSController : MonoBehaviour
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        controller =
+            GetComponent<CharacterController>();
 
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState =
+            CursorLockMode.Locked;
+
         Cursor.visible = false;
 
-        currentStamina = maxStamina;
+        currentStamina =
+            maxStamina;
 
-        currentSpeed = walkSpeed;
+        currentSpeed =
+            walkSpeed;
 
-        originalCamPos = cameraHolder.localPosition;
+        originalCamPos =
+            cameraHolder.localPosition;
     }
 
     void Update()
     {
         Look();
+
         Move();
+
         HandleCrouch();
+
         HeadBob();
     }
 
@@ -87,20 +111,34 @@ public class HorrorFPSController : MonoBehaviour
 
         xRotation -= mouseY;
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        xRotation =
+            Mathf.Clamp(
+                xRotation,
+                -90f,
+                90f
+            );
 
-        // Rotate camera holder
+        // CAMERA ROTATION
         cameraHolder.localRotation =
-            Quaternion.Euler(xRotation, 0f, 0f);
+            Quaternion.Euler(
+                xRotation,
+                0f,
+                0f
+            );
 
-        // Rotate player body
-        transform.Rotate(Vector3.up * mouseX);
+        // PLAYER ROTATION
+        transform.Rotate(
+            Vector3.up * mouseX
+        );
     }
 
     void Move()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        float x =
+            Input.GetAxis("Horizontal");
+
+        float z =
+            Input.GetAxis("Vertical");
 
         move =
             transform.right * x +
@@ -117,32 +155,36 @@ public class HorrorFPSController : MonoBehaviour
             cooldownTimer <= 0 &&
             !isCrouching;
 
-        // Sprinting
+        // SPRINTING
         if (tryingToSprint &&
-            isMoving &&
-            canSprint)
+           isMoving &&
+           canSprint)
         {
-            currentSpeed = sprintSpeed;
+            currentSpeed =
+                sprintSpeed;
 
             currentStamina -=
-                staminaDrain * Time.deltaTime;
+                staminaDrain *
+                Time.deltaTime;
 
             if (currentStamina <= 0)
             {
                 currentStamina = 0;
 
-                cooldownTimer = sprintCooldown;
+                cooldownTimer =
+                    sprintCooldown;
             }
         }
         else
         {
             currentSpeed =
-                isCrouching ?
-                crouchSpeed :
-                walkSpeed;
+                isCrouching
+                ? crouchSpeed
+                : walkSpeed;
 
             currentStamina +=
-                staminaRecovery * Time.deltaTime;
+                staminaRecovery *
+                Time.deltaTime;
 
             currentStamina =
                 Mathf.Clamp(
@@ -152,50 +194,97 @@ public class HorrorFPSController : MonoBehaviour
                 );
         }
 
-        // Cooldown
+        // STAMINA COOLDOWN
         if (cooldownTimer > 0)
         {
-            cooldownTimer -= Time.deltaTime;
+            cooldownTimer -=
+                Time.deltaTime;
         }
 
+        // PLAYER MOVEMENT
         controller.Move(
             move *
             currentSpeed *
             Time.deltaTime
         );
 
-        // Gravity
+        // GRAVITY
         if (controller.isGrounded &&
-            velocity.y < 0)
+           velocity.y < 0)
         {
             velocity.y = -2f;
         }
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y +=
+            gravity *
+            Time.deltaTime;
 
         controller.Move(
-            velocity * Time.deltaTime
+            velocity *
+            Time.deltaTime
         );
+
+        // MAKE NOISE
+        if (isMoving)
+        {
+            float noiseDistance =
+                walkNoiseRange;
+
+            // Sprint louder
+            if (currentSpeed ==
+               sprintSpeed)
+            {
+                noiseDistance =
+                    sprintNoiseRange;
+            }
+
+            // Crouch quieter
+            if (isCrouching)
+            {
+                noiseDistance =
+                    crouchNoiseRange;
+            }
+
+            // Find monsters
+            MonsterAI[] monsters =
+                FindObjectsByType<MonsterAI>(
+                    FindObjectsSortMode.None
+                );
+
+            foreach (MonsterAI monster in monsters)
+            {
+                monster.HearNoise(
+                    transform.position,
+                    noiseDistance
+                );
+            }
+        }
     }
 
     void HandleCrouch()
     {
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        // HOLD CTRL TO CROUCH
+        if (Input.GetKey(KeyCode.LeftControl))
         {
-            isCrouching = !isCrouching;
+            isCrouching = true;
+        }
+        else
+        {
+            isCrouching = false;
         }
 
         float targetHeight =
-            isCrouching ?
-            crouchHeight :
-            normalHeight;
+            isCrouching
+            ? crouchHeight
+            : normalHeight;
 
-        controller.height = Mathf.Lerp(
-            controller.height,
-            targetHeight,
-            crouchTransitionSpeed *
-            Time.deltaTime
-        );
+        controller.height =
+            Mathf.Lerp(
+                controller.height,
+                targetHeight,
+                crouchTransitionSpeed *
+                Time.deltaTime
+            );
     }
 
     void HeadBob()
@@ -206,15 +295,15 @@ public class HorrorFPSController : MonoBehaviour
 
         if (isMoving)
         {
-            // Faster while sprinting
             float currentBobSpeed =
-                currentSpeed == sprintSpeed
+                currentSpeed ==
+                sprintSpeed
                 ? bobSpeed * 1.6f
                 : bobSpeed;
 
-            // Stronger while sprinting
             float currentBobAmount =
-                currentSpeed == sprintSpeed
+                currentSpeed ==
+                sprintSpeed
                 ? bobAmount * 1.3f
                 : bobAmount;
 
@@ -225,7 +314,7 @@ public class HorrorFPSController : MonoBehaviour
             Vector3 bobPosition =
                 originalCamPos;
 
-            // ONLY vertical movement
+            // Vertical bob only
             bobPosition.y +=
                 Mathf.Sin(bobTimer) *
                 currentBobAmount;
