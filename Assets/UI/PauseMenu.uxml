@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/PauseMenu.uss?fileID=7433441132597879392&amp;guid=fea0bdd4e967b3c409f9e406f9851c4e&amp;type=3#PauseMenu"/>
+    <ui:VisualElement name="menu-container" picking-mode="Ignore" class="menu-container">
+        <ui:VisualElement name="left-panel" picking-mode="Ignore" class="left-panel">
+            <ui:Label text="PAUSED" class="menu-title"/>
+            <ui:Button name="resume-button" text="Resume" class="menu-button"/>
+            <ui:Button name="settings-button" text="Settings" class="menu-button"/>
+            <ui:Button name="quit-button" text="Quit" class="menu-button"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="right-panel" picking-mode="Ignore" class="right-panel">
+            <ui:Label text="INVENTORY" class="menu-title"/>
+            <ui:ScrollView name="inventory-scroll">
+                <ui:VisualElement name="inventory-grid" class="inventory-grid"/>
+            </ui:ScrollView>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

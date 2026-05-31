@@ -1,0 +1,113 @@
+.menu-container {
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.left-panel {
+    width: 30%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border-right-width: 1px;
+    border-right-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/big_background.png?fileID=2800000&guid=4edbc5539b441f049966c07e2ba12186&type=3#big_background");
+    -unity-slice-left: 20;
+    -unity-slice-right: 20;
+    -unity-slice-top: 20;
+    -unity-slice-bottom: 20;
+}
+
+.right-panel {
+    width: 70%;
+    height: 100%;
+    padding: 20px;
+}
+
+.menu-title {
+    font-size: 28px;
+    color: white;
+    margin-bottom: 30px;
+    -unity-font-style: bold;
+    -unity-text-align: upper-center;
+}
+
+.menu-button {
+    width: 180px;
+    height: 45px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    background-image: url("project://database/Assets/Fantasy%20Wooden%20GUI%20%20Free/normal_ui_set%20A/TextBTN_Big.png?fileID=2800000&guid=2be7b70e984b51444aca9c12ae4723a7&type=3#TextBTN_Big");
+    -unity-slice-left: 15;
+    -unity-slice-right: 15;
+    -unity-slice-top: 10;
+    -unity-slice-bottom: 10;
+}
+
+.menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: white;
+    background-image: url("project://database/Assets/Fantasy%20Wooden%20GUI%20%20Free/normal_ui_set%20A/TextBTN_Big.png?fileID=2800000&guid=2be7b70e984b51444aca9c12ae4723a7&type=3#TextBTN_Big");
+}
+
+.menu-button:active {
+    background-color: rgba(0, 0, 0, 0);
+    padding-top: 3px;
+    background-image: url("project://database/Assets/Fantasy%20Wooden%20GUI%20%20Free/normal_ui_set%20A/TextBTN_Big_Pressed.png?fileID=2800000&guid=d6a1673a31851fd4395c287261da36e4&type=3#TextBTN_Big_Pressed");
+}
+
+#inventory-scroll {
+    flex-grow: 1;
+    height: 85%;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Frame_big.png?fileID=2800000&guid=c430351465fe1fc42a6bef5878a08253&type=3#Frame_big");
+}
+
+.inventory-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 10px;
+    background-image: none;
+}
+
+.inventory-slot {
+   width: 80px;
+    height: 80px;
+    margin: 5px;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Mini_frame1.png?fileID=2800000&guid=9a38d34966735d24e9cda5ecb0a183bc&type=3#Mini_frame1");
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    -unity-slice-left: 8;
+    -unity-slice-right: 8;
+    -unity-slice-top: 8;
+    -unity-slice-bottom: 8;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.inventory-slot:hover {
+    -unity-background-image-tint-color: rgba(255, 210, 130, 1);
+}
+
+.inventory-icon {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+}
+.inventory-label {
+      position: absolute;
+    bottom: 2px;
+    font-size: 9px;
+    color: white;
+    -unity-text-align: upper-center;
+    white-space: normal;
+    width: 100%;
+}
