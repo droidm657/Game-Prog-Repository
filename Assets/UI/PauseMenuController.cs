@@ -8,6 +8,7 @@ using Debug = UnityEngine.Debug;
 
 public class PauseMenuController : MonoBehaviour
 {
+    
     private UIDocument uiDocument;
     private VisualElement menuContainer;
     private VisualElement inventoryGrid;

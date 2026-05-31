@@ -860,12 +860,10 @@ GameObject:
   m_Component:
   - component: {fileID: 909777665}
   - component: {fileID: 909777666}
-  - component: {fileID: 909777667}
-  - component: {fileID: 909777668}
   - component: {fileID: 909777670}
-  - component: {fileID: 909777669}
-  - component: {fileID: 909777671}
   - component: {fileID: 909777672}
+  - component: {fileID: 909777673}
+  - component: {fileID: 909777674}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -915,70 +913,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.6, z: 0}
---- !u!114 &909777667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909777663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb240d7afbe25004f8b12e289f6e673b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HorrorFPSController
-  walkSpeed: 8
-  sprintSpeed: 15
-  crouchSpeed: 4
-  walkNoiseRange: 5
-  sprintNoiseRange: 10
-  crouchNoiseRange: 1
-  maxStamina: 6
-  currentStamina: 0
-  staminaDrain: 1
-  staminaRecovery: 15
-  sprintCooldown: 4
-  gravity: -9.81
-  mouseSensitivity: 200
-  cameraHolder: {fileID: 1450782175}
-  normalHeight: 2
-  crouchHeight: 0.5
-  crouchTransitionSpeed: 8
-  isCrouching: 0
-  bobSpeed: 12
-  bobAmount: 0.15
---- !u!114 &909777668
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909777663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1583a19401deba6419cf29c58385fad1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
-  keys: []
---- !u!114 &909777669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909777663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 053caf7b6694af04c8c378eb8eb2eaea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FootstepSystem
-  audioSource: {fileID: 909777670}
-  walkClip: {fileID: 8300000, guid: d34a4cb9b34bb5d4eb7428bd8ff6da7f, type: 3}
-  sprintClip: {fileID: 8300000, guid: d3700620ebe48134b8a074a5469b3910, type: 3}
-  crouchClip: {fileID: 8300000, guid: d34a4cb9b34bb5d4eb7428bd8ff6da7f, type: 3}
-  walkStepDelay: 1
-  sprintStepDelay: 0.3
-  crouchStepDelay: 0.8
 --- !u!82 &909777670
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1076,40 +1010,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &909777671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909777663}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a70ea314f3659843b26dc1b4c55381d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FlashlightSystem
-  flashlightObject: {fileID: 0}
-  flashlightLight: {fileID: 0}
-  toggleKey: 102
-  startEnabled: 1
-  maxBattery: 100
-  currentBattery: 100
-  batteryDrainSpeed: 1
-  lowBatteryThreshold: 20
-  enableFlicker: 1
-  minIntensity: 100
-  maxIntensity: 120
-  flickerSpeed: 0.05
-  enableFlashBurst: 1
-  requiredBatteryPercent: 1
-  batteryDrainFromBurst: 25
-  flashBurstIntensity: 1000
-  flashBurstDuration: 0.1
-  flashFadeDuration: 1
-  flashRange: 100
-  stunDuration: 10
-  flashCooldown: 10
-  canFlash: 1
 --- !u!114 &909777672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1124,6 +1024,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventorySystem
   maxInventorySize: 10
   items: []
+--- !u!114 &909777673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909777663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 524d7916052467b409c6aa4c2b386e45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  moveSpeed: 5
+  jumpForce: 5
+  gravity: -9.81
+  mouseSensitivity: 100
+  cameraHolder: {fileID: 1450782175}
+--- !u!114 &909777674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909777663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1016823386
 GameObject:
   m_ObjectHideFlags: 0
