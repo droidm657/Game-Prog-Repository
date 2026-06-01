@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 802e8d6259f907c438ed25289ae440ca, type: 3}
-  m_Name: LampItem
+  m_Name: flashlight item
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemID: 0
-  itemName: lamp
+  itemName: mikes flashlight
   itemIcon: {fileID: 0}
-  objectPrefab: {fileID: 203211323996476850, guid: 48d1c73a7271bb54284e34e4425547e9, type: 3}
+  objectPrefab: {fileID: 143711956648162663, guid: a16ffdf5354a3f649928fc678cbfd326, type: 3}
   itemType: 4
   isEquippable: 1
-  equipPositionOffset: {x: 0.2, y: -0.9, z: 0.5}
-  equipRotationOffset: {x: 0, y: 90, z: 0}
+  equipPositionOffset: {x: 1.2, y: 0, z: -0.5}
+  equipRotationOffset: {x: 0, y: -90, z: 0}
   isAmmo: 0
   ammoCount: 0
   isConsumable: 0

@@ -4,15 +4,26 @@ using TMPro;
 
 public class FlashlightUI : MonoBehaviour
 {
-    public FlashlightSystem flashlightSystem;
+    public GameObject flashlightUI;
 
-    [Header("UI")]
     public Image batteryFill;
-
     public TMP_Text batteryText;
+
+    private FlashlightSystem flashlightSystem;
 
     void Update()
     {
+        flashlightSystem =
+            FindFirstObjectByType<FlashlightSystem>();
+
+        if (flashlightSystem == null)
+        {
+            flashlightUI.SetActive(false);
+            return;
+        }
+
+        flashlightUI.SetActive(true);
+
         float batteryPercent =
             flashlightSystem.currentBattery /
             flashlightSystem.maxBattery;

@@ -9,6 +9,15 @@ public class PlayerController : MonoBehaviour
     public float sprintSpeed = 10f;
     public float gravity = -9.81f;
 
+    [Header("Footsteps")]
+    public AudioSource footstepSource;
+    public AudioClip footstepClip;
+
+    public float walkStepInterval = 0.5f;
+    public float sprintStepInterval = 0.3f;
+
+    private float footstepTimer;
+
     [Header("Mouse Look")]
     public float mouseSensitivity = 100f;
     public Transform cameraHolder;
@@ -18,6 +27,15 @@ public class PlayerController : MonoBehaviour
     public float staminaDrainRate = 20f;
     public float staminaRegenRate = 10f;
     public float staminaRegenDelay = 2f;
+
+    [Header("Head Bob")]
+    public bool enableHeadBob = true;
+    public float bobSpeed = 8f;
+    public float bobAmount = 0.05f;
+    public float sprintBobMultiplier = 1.5f;
+
+    private float defaultCameraY;
+    private float bobTimer;
 
     private CharacterController characterController;
     private float verticalRotation = 0f;
@@ -38,6 +56,7 @@ public class PlayerController : MonoBehaviour
     {
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
         UnityEngine.Cursor.visible = false;
+        defaultCameraY = cameraHolder.localPosition.y;
     }
 
     void OnMove(InputValue value)
@@ -56,6 +75,8 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleGravity();
         HandleStamina();
+        HandleHeadBob();
+        HandleFootsteps();
     }
 
     void HandleMovement()
@@ -115,4 +136,79 @@ public class PlayerController : MonoBehaviour
     }
 
     public float GetStaminaPercent() => currentStamina / maxStamina;
+
+    void HandleHeadBob()
+    {
+        if (!enableHeadBob)
+            return;
+
+        bool isMoving =
+            moveInput.magnitude > 0.1f &&
+            characterController.isGrounded;
+
+        if (isMoving)
+        {
+            float currentBobSpeed =
+                isSprinting
+                    ? bobSpeed * sprintBobMultiplier
+                    : bobSpeed;
+
+            bobTimer +=
+                Time.deltaTime * currentBobSpeed;
+
+            Vector3 camPos =
+                cameraHolder.localPosition;
+
+            camPos.y =
+                defaultCameraY +
+                Mathf.Sin(bobTimer) * bobAmount;
+
+            cameraHolder.localPosition =
+                camPos;
+        }
+        else
+        {
+            bobTimer = 0;
+
+            Vector3 camPos =
+                cameraHolder.localPosition;
+
+            camPos.y =
+                Mathf.Lerp(
+                    camPos.y,
+                    defaultCameraY,
+                    Time.deltaTime * 5f
+                );
+
+            cameraHolder.localPosition =
+                camPos;
+        }
+
+    }
+    void HandleFootsteps()
+    {
+        bool isMoving =
+            moveInput.magnitude > 0.1f &&
+            characterController.isGrounded;
+
+        if (isMoving)
+        {
+            if (!footstepSource.isPlaying)
+            {
+                footstepSource.clip = footstepClip;
+                footstepSource.loop = true;
+                footstepSource.Play();
+            }
+
+            footstepSource.pitch =
+                isSprinting ? 1.3f : 1f;
+        }
+        else
+        {
+            if (footstepSource.isPlaying)
+            {
+                footstepSource.Stop();
+            }
+        }
+    }
 }
