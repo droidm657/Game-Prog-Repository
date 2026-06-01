@@ -20,6 +20,10 @@ public class ItemData : ScriptableObject
 
     [Header("Consumable Settings")]
     public bool isConsumable;
+    public int consumableCount;
+
+    [Header("Key Item Settings")]
+    public bool isKeyItem;
 
 
     public enum ItemType

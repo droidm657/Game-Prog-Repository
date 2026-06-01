@@ -246,3 +246,60 @@
     -unity-text-align: upper-center;
     -unity-font-style: italic;
 }
+
+.ammo-container {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    flex-direction: row;
+    align-items: center;
+    display: none;
+}
+
+.ammo-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
+    background-image: url("project://database/Assets/Sprites/ShotgunShell.png?fileID=2800000&guid=70c0690e883b5a1438c2b30162005d95&type=3#ShotgunShell");
+}
+
+.ammo-text {
+    color: white;
+    font-size: 24px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.health-container {
+    position: absolute;
+    bottom: 75px; 
+    left: 30px;
+    width: 250px;
+}
+
+.health-label {
+    color: white;
+    font-size: 12px;
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.health-bar-bg {
+    width: 250px;
+    height: 14px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Hp_frame.png?fileID=2800000&guid=9d5f6625b0b035841a1153f7e5466a94&type=3#Hp_frame");
+}
+
+.health-bar-fill {
+    width: 100%; 
+    height: 100%;
+    border-radius: 3px;
+    transition-property: width, background-color;
+    transition-duration: 0.1s;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Hp_line.png?fileID=2800000&guid=4f8e653bf1c0b054680c13a05741c202&type=3#Hp_line");
+    -unity-background-image-tint-color: rgb(255, 50, 50); 
+}

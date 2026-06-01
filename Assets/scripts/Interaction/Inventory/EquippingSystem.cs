@@ -45,6 +45,11 @@ public class EquippingSystem : MonoBehaviour
             currentEquippedItem = item;
             Debug.Log($"Equipped: {item.itemName}");
         }
+        if (item.itemType == ItemData.ItemType.Weapon)
+            UIManager.Instance?.UpdateAmmoDisplay(
+                ShootingSystem.Instance.GetCurrentChamber(),
+                ShootingSystem.Instance.GetCurrentChamber(),
+                AmmoSystem.Instance.GetAmmo());
     }
 
     public void UnequipCurrent()
@@ -56,6 +61,7 @@ public class EquippingSystem : MonoBehaviour
             Debug.Log($"Unequipped: {currentEquippedItem.itemName}");
             currentEquippedItem = null;
         }
+        UIManager.Instance?.HideAmmo();
     }
 
     public ItemData GetEquippedItem() => currentEquippedItem;

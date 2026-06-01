@@ -191,6 +191,8 @@ public class ShootingSystem : MonoBehaviour
                     endPoint
                 )
             );
+
+            UIManager.Instance?.UpdateAmmoDisplay(currentChamber,currentChamber,AmmoSystem.Instance.GetAmmo());
         }
     }
 
@@ -223,6 +225,8 @@ public class ShootingSystem : MonoBehaviour
         {
             Debug.Log("No ammo to reload with!");
         }
+
+        UIManager.Instance?.UpdateAmmoDisplay(currentChamber,currentChamber,AmmoSystem.Instance.GetAmmo());
 
         isReloading = false;
     }
