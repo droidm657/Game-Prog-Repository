@@ -100,6 +100,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shotgun-Pickup
       objectReference: {fileID: 0}
+    - target: {fileID: 5233112405309087440, guid: c80c03ff85328564a895d3d3b9316e28, type: 3}
+      propertyPath: m_Name
+      value: MuzzlePoint
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

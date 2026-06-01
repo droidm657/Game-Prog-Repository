@@ -14,6 +14,10 @@ public class ShootingSystem : MonoBehaviour
     public int shotsPerShell = 1;
     public int maxChamberSize = 6;
 
+    [Header("Shotgun Spread")]
+    public int pelletsPerShot = 8;
+    public float spreadAngle = 4f;
+
     [Header("Reload Settings")]
     public float reloadTime = 2f;
     public KeyCode reloadKey = KeyCode.R;
@@ -22,6 +26,11 @@ public class ShootingSystem : MonoBehaviour
     public Camera playerCamera;
     public AudioSource shootSound;
     public AudioSource reloadSound;
+
+    [Header("Tracer")]
+    private Transform muzzlePoint;
+    public Material tracerMaterial;
+    public float tracerDuration = 0.05f;
 
     private float nextFireTime = 0f;
     private bool canShoot = false;
@@ -49,7 +58,19 @@ public class ShootingSystem : MonoBehaviour
                 .GetEquippedObject()
                 ?.GetComponent<Animator>();
 
-            // Fill chamber when first equipped
+            GameObject shotgun =
+                EquippingSystem.Instance
+                .GetEquippedObject();
+
+            if (shotgun != null)
+            {
+                Transform foundMuzzle =
+                    shotgun.transform.Find("MuzzlePoint");
+
+                if (foundMuzzle != null)
+                    muzzlePoint = foundMuzzle;
+            }
+
             if (currentChamber == 0)
                 currentChamber = maxChamberSize;
         }
@@ -106,19 +127,70 @@ public class ShootingSystem : MonoBehaviour
 
         Debug.DrawRay(ray.origin, ray.direction * shootRange, Color.red, 1f);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, shootRange))
+        for (int i = 0; i < pelletsPerShot; i++)
         {
-            Debug.Log($"Hit: {hit.collider.gameObject.name} at {hit.distance}m");
+            Vector3 spreadDirection =
+                playerCamera.transform.forward;
 
-            HealthSystem health = hit.collider.GetComponent<HealthSystem>();
-            if (health != null)
-                health.TakeDamage(damagePerShot);
+            spreadDirection +=
+                playerCamera.transform.right *
+                Random.Range(
+                    -spreadAngle,
+                    spreadAngle
+                ) * 0.01f;
 
-            Lock lockComponent = hit.collider.GetComponent<Lock>();
-            if (lockComponent != null)
-                lockComponent.ShootLock();
+            spreadDirection +=
+                playerCamera.transform.up *
+                Random.Range(
+                    -spreadAngle,
+                    spreadAngle
+                ) * 0.01f;
 
-            SpawnHitEffect(hit.point, hit.normal);
+            spreadDirection.Normalize();
+
+            Ray spreadRay =
+                new Ray(
+                    playerCamera.transform.position,
+                    spreadDirection
+                );
+
+            Vector3 endPoint;
+
+            if (Physics.Raycast(
+                spreadRay,
+                out RaycastHit hit,
+                shootRange))
+            {
+                endPoint = hit.point;
+
+                HealthSystem health =
+                    hit.collider.GetComponent<HealthSystem>();
+
+                if (health != null)
+                    health.TakeDamage(
+                        damagePerShot
+                    );
+
+                Lock lockComponent =
+                    hit.collider.GetComponent<Lock>();
+
+                if (lockComponent != null)
+                    lockComponent.ShootLock();
+            }
+            else
+            {
+                endPoint =
+                    spreadRay.origin +
+                    spreadRay.direction *
+                    shootRange;
+            }
+
+            StartCoroutine(
+                SpawnTracer(
+                    muzzlePoint.position,
+                    endPoint
+                )
+            );
         }
     }
 
@@ -155,14 +227,35 @@ public class ShootingSystem : MonoBehaviour
         isReloading = false;
     }
 
-    void SpawnHitEffect(Vector3 point, Vector3 normal)
+    IEnumerator SpawnTracer(
+    Vector3 startPos,
+    Vector3 endPos)
     {
-        GameObject impact = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        impact.transform.position = point;
-        impact.transform.localScale = Vector3.one * 0.05f;
-        Destroy(impact, 0.5f);
-    }
+        GameObject tracer =
+            new GameObject("Tracer");
 
+        LineRenderer lr =
+            tracer.AddComponent<LineRenderer>();
+
+        lr.material =
+            tracerMaterial;
+
+        lr.positionCount = 2;
+
+        lr.startWidth = 0.03f;
+        lr.endWidth = 0.01f;
+
+        lr.useWorldSpace = true;
+
+        lr.SetPosition(0, startPos);
+        lr.SetPosition(1, endPos);
+
+        yield return new WaitForSeconds(
+            tracerDuration
+        );
+
+        Destroy(tracer);
+    }
     public int GetCurrentChamber() => currentChamber;
     public int GetMaxChamber() => maxChamberSize;
     public bool IsReloading() => isReloading;

@@ -86,6 +86,13 @@ public class MonsterAI : MonoBehaviour
     [Header("FLASHLIGHT")]
     public float stunDuration = 3f;
 
+    [Header("KILL SYSTEM")]
+    public float killDistance = 1.5f;
+
+    public float deathSequenceDuration = 2f;
+
+    private bool killingPlayer = false;
+
     [Header("AUDIO")]
     public AudioSource audioSource;
 
@@ -257,6 +264,25 @@ public class MonsterAI : MonoBehaviour
         // CHASE PLAYER
         if (chasingPlayer)
         {
+            float killCheckDistance =
+                Vector3.Distance(
+                    transform.position,
+                    player.position
+                );
+
+            // PLAYER CAUGHT
+            if (killCheckDistance <= killDistance &&
+    !killingPlayer)
+            {
+                Debug.Log("PLAYER CAUGHT");
+
+                StartCoroutine(
+                    KillPlayer()
+                );
+
+                return;
+            }
+
             memoryTimer -= Time.deltaTime;
 
             agent.speed +=
@@ -662,5 +688,67 @@ public class MonsterAI : MonoBehaviour
 
             GoToNextPoint();
         }
+    }
+    IEnumerator KillPlayer()
+    {
+        killingPlayer = true;
+
+        chasingPlayer = false;
+        searching = false;
+        reactingToNoise = false;
+
+        agent.isStopped = true;
+
+        // Disable player movement
+        HorrorFPSController fps =
+            player.GetComponent<HorrorFPSController>();
+
+        if (fps != null)
+            fps.enabled = false;
+
+        CharacterController cc =
+            player.GetComponent<CharacterController>();
+
+        if (cc != null)
+            cc.enabled = false;
+
+        Camera cam = Camera.main;
+
+        float timer = 0f;
+
+        while (timer < deathSequenceDuration)
+        {
+            timer += Time.deltaTime;
+
+            // Force camera to look at monster
+            Vector3 lookDir =
+                transform.position -
+                cam.transform.position;
+
+            Quaternion targetRotation =
+                Quaternion.LookRotation(
+                    lookDir
+                );
+
+            cam.transform.rotation =
+                Quaternion.Slerp(
+                    cam.transform.rotation,
+                    targetRotation,
+                    8f * Time.deltaTime
+                );
+
+            // Monster slowly approaches player
+            transform.position =
+                Vector3.MoveTowards(
+                    transform.position,
+                    player.position,
+                    1.5f * Time.deltaTime
+                );
+
+            yield return null;
+        }
+
+        DeathPanelManager.Instance
+            .ShowDeathPanel();
     }
 }
