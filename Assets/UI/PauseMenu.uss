@@ -78,7 +78,7 @@
 }
 
 .inventory-slot {
-   width: 80px;
+    width: 80px;
     height: 80px;
     margin: 5px;
     background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Mini_frame1.png?fileID=2800000&guid=9a38d34966735d24e9cda5ecb0a183bc&type=3#Mini_frame1");
@@ -94,7 +94,11 @@
 }
 
 .inventory-slot:hover {
-    -unity-background-image-tint-color: rgba(255, 210, 130, 1);
+    -unity-background-image-tint-color: rgb(255, 210, 130);
+}
+
+.inventory-slot-empty {
+    opacity: 0.4;
 }
 
 .inventory-icon {
@@ -102,12 +106,143 @@
     height: 50px;
     position: absolute;
 }
+
 .inventory-label {
-      position: absolute;
+    position: absolute;
     bottom: 2px;
     font-size: 9px;
     color: white;
     -unity-text-align: upper-center;
     white-space: normal;
     width: 100%;
+}
+
+.pickup-prompt {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    align-items: center;
+    display: none;
+}
+
+.pickup-text {
+    background-color: rgba(0, 0, 0, 0);
+    -unity-slice-left: 15;
+    -unity-slice-right: 15;
+    -unity-slice-top: 10;
+    -unity-slice-bottom: 10;
+    border-width: 0;
+    color: white;
+    font-size: 18px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    min-width: 300px;
+    background-image: url("project://database/Assets/Fantasy%20Wooden%20GUI%20%20Free/normal_ui_set%20A/UI%20board%20Medium%20stone.png?fileID=2800000&guid=9a6560e5bacb40847bb1b879ede354fb&type=3#UI board Medium stone");
+}
+
+.pickup-prompt-visible {
+    opacity: 1;
+    transition-property: opacity;
+    transition-duration: 0.3s;
+}
+
+.pickup-prompt-hidden {
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.3s;
+}
+
+.stamina-container {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    width: 250px;
+}
+
+.stamina-label {
+    color: white;
+    font-size: 12px;
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.stamina-bar-bg {
+    width: 250px;
+    height: 14px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Hp_frame.png?fileID=2800000&guid=9d5f6625b0b035841a1153f7e5466a94&type=3#Hp_frame");
+}
+
+.stamina-bar-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+    transition-property: width, background-color;
+    transition-duration: 0.1s;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Hp_line.png?fileID=2800000&guid=4f8e653bf1c0b054680c13a05741c202&type=3#Hp_line");
+    -unity-background-image-tint-color: rgb(0, 255, 80);
+}
+
+.inventory-slot-equipped {
+    border-color: rgb(255, 210, 50);
+    border-width: 2px;
+    -unity-background-image-tint-color: rgba(255, 210, 50, 0.3);
+}
+
+.crosshair {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.8);
+    top: 50%;
+    left: 50%;
+    margin-top: -4px;
+    margin-left: -4px;
+}
+
+.dialogue-container {
+    position: absolute;
+    bottom: 120px;
+    left: 0;
+    right: 0;
+    align-items: center;
+    display: none;
+}
+
+.dialogue-box {
+    -unity-slice-left: 20;
+    -unity-slice-right: 20;
+    -unity-slice-top: 20;
+    -unity-slice-bottom: 20;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+    padding: 20px 30px;
+    max-width: 600px;
+    min-width: 400px;
+    align-items: center;
+    background-image: url("project://database/Assets/GUI_Parts/Gui_parts/Mini_background.png?fileID=2800000&guid=4f033cdd2b09f9a43b139729d09d002c&type=3#Mini_background");
+}
+
+.dialogue-text {
+    color: white;
+    font-size: 18px;
+    -unity-text-align: upper-center;
+    white-space: normal;
+    margin-bottom: 10px;
+}
+
+.dialogue-continue {
+    color: rgb(255, 210, 130);
+    font-size: 12px;
+    -unity-text-align: upper-center;
+    -unity-font-style: italic;
 }

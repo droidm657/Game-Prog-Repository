@@ -9,6 +9,19 @@ public class ItemData : ScriptableObject
     public GameObject objectPrefab;
     public ItemType itemType;
 
+    [Header("Equip Settings")]
+    public bool isEquippable;
+    public Vector3 equipPositionOffset;
+    public Vector3 equipRotationOffset;
+
+    [Header("Ammo Settings")]
+    public bool isAmmo;
+    public int ammoCount;
+
+    [Header("Consumable Settings")]
+    public bool isConsumable;
+
+
     public enum ItemType
     {
         Weapon,

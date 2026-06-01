@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 802e8d6259f907c438ed25289ae440ca, type: 3}
-  m_Name: Shotgun
+  m_Name: ShotgunShells
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 0
-  itemName: Shotgun
-  itemIcon: {fileID: 21300000, guid: 243dc97c353f7594b9863dce1ae2e6b8, type: 3}
-  objectPrefab: {fileID: 7495920872212361876, guid: 33ff369e7855292469153da3cc95b8cc, type: 3}
-  itemType: 0
-  isEquippable: 1
-  equipPositionOffset: {x: 0.3, y: -0.2, z: 0.5}
-  equipRotationOffset: {x: -88, y: 0, z: 0}
+  itemID: 2
+  itemName: Shotgun Shells
+  itemIcon: {fileID: 21300000, guid: 70c0690e883b5a1438c2b30162005d95, type: 3}
+  objectPrefab: {fileID: 3126829491742225897, guid: 8205014306c3d3d41bc12b46ca9f2272, type: 3}
+  itemType: 1
+  isEquippable: 0
+  equipPositionOffset: {x: 0, y: 0, z: 0}
+  equipRotationOffset: {x: 0, y: 0, z: 0}
+  isAmmo: 1
+  ammoCount: 14
+  isConsumable: 0

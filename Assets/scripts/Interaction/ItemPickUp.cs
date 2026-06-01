@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class ItemPickUp : MonoBehaviour
 {
@@ -10,11 +12,19 @@ public class ItemPickUp : MonoBehaviour
     public KeyCode pickUpKey = KeyCode.E;
 
     private bool isPlayerInRange = false;
+    private Transform playerTransform;
 
     void Update()
     {
         if (isPlayerInRange && Input.GetKeyDown(pickUpKey))
         {
+            GateInteraction gate = GetComponent<GateInteraction>();
+            if (gate != null)
+            {
+                gate.TryOpen(playerTransform);
+                return;
+            }
+
             PickUpItem();
         }
     }
@@ -24,26 +34,26 @@ public class ItemPickUp : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             isPlayerInRange = true;
-            Debug.Log($"Press E to Pick Up {itemData.itemName}");
-            // show ui prompt to pick up item here
+            playerTransform = other.transform;
+            UIManager.Instance.ShowPickupPrompt(itemData.itemName);
         }
     }
-    
+
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             isPlayerInRange = false;
-            // hide ui prompt to pick up item here
+            playerTransform = null;
+            UIManager.Instance.HidePickupPrompt();
         }
     }
 
     void PickUpItem()
     {
-        // Add item to player's inventory
         InventorySystem.Instance.AddItem(itemData);
         Debug.Log($"Picked up {itemData.itemName}");
-        // Destroy the item in the world
+        UIManager.Instance.HidePickupPrompt();
         Destroy(gameObject);
     }
 

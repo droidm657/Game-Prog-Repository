@@ -1,5 +1,25 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/PauseMenu.uss?fileID=7433441132597879392&amp;guid=fea0bdd4e967b3c409f9e406f9851c4e&amp;type=3#PauseMenu"/>
+    
+    <ui:VisualElement name="crosshair" class="crosshair"/>
+    <ui:VisualElement name="stamina-container" class="stamina-container">
+        <ui:Label text="STAMINA" class="stamina-label"/>
+        <ui:VisualElement name="stamina-bar-bg" class="stamina-bar-bg">
+            <ui:VisualElement name="stamina-bar-fill" class="stamina-bar-fill"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <!-- Dialogue Box -->
+<ui:VisualElement name="dialogue-container" class="dialogue-container">
+    <ui:VisualElement name="dialogue-box" class="dialogue-box">
+        <ui:Label name="dialogue-text" class="dialogue-text" 
+                  text="I remember bringing a shotgun at the back of the truck..."/>
+        <ui:Label name="dialogue-continue" class="dialogue-continue" 
+                  text="Press E to continue"/>
+    </ui:VisualElement>
+</ui:VisualElement>
+    <ui:VisualElement name="pickup-prompt" class="pickup-prompt">
+        <ui:Label name="pickup-text" text="Press E to Pick Up Item" class="pickup-text"/>
+    </ui:VisualElement>
     <ui:VisualElement name="menu-container" picking-mode="Ignore" class="menu-container">
         <ui:VisualElement name="left-panel" picking-mode="Ignore" class="left-panel">
             <ui:Label text="PAUSED" class="menu-title"/>

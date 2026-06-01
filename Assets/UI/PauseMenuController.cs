@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Application = UnityEngine.Application;
-using Label = UnityEngine.UIElements.Label;
 using Debug = UnityEngine.Debug;
+using Label = UnityEngine.UIElements.Label;
 
 
 public class PauseMenuController : MonoBehaviour
@@ -58,18 +59,57 @@ public class PauseMenuController : MonoBehaviour
     void RefreshInventory()
     {
         inventoryGrid.Clear();
-        foreach (ItemData itemData in InventorySystem.Instance.items)
+
+        int totalSlots = InventorySystem.Instance.maxInventorySize;
+        List<ItemData> items = InventorySystem.Instance.items;
+
+        for (int i = 0; i < totalSlots; i++)
         {
             var slot = new VisualElement();
             slot.AddToClassList("inventory-slot");
-            var icon = new VisualElement();
-            icon.AddToClassList("inventory-icon");
-            if (itemData.itemIcon != null)
-                icon.style.backgroundImage = new StyleBackground(itemData.itemIcon);
-            var nameLabel = new Label(itemData.itemName);
-            nameLabel.AddToClassList("inventory-label");
-            slot.Add(icon);
-            slot.Add(nameLabel);
+
+            if (i < items.Count)
+            {
+                ItemData item = items[i];
+                // Filled slot
+                var icon = new VisualElement();
+                icon.AddToClassList("inventory-icon");
+                if (items[i].itemIcon != null)
+                    icon.style.backgroundImage = new StyleBackground(items[i].itemIcon);
+
+                var nameLabel = new UnityEngine.UIElements.Label(items[i].itemName);
+                nameLabel.AddToClassList("inventory-label");
+
+                slot.Add(icon);
+                slot.Add(nameLabel);
+
+                if (EquippingSystem.Instance.GetEquippedItem() == item)
+                    slot.AddToClassList("inventory-slot-equipped");
+
+                // Click to equip
+                slot.RegisterCallback<ClickEvent>(evt =>
+                {
+                    if (item.isEquippable)
+                    {
+                        if (EquippingSystem.Instance.GetEquippedItem() == item)
+                            EquippingSystem.Instance.UnequipCurrent();
+                        else
+                            EquippingSystem.Instance.EquipItem(item);
+
+                        RefreshInventory();
+                    }
+                    else
+                    {
+                        Debug.Log($"{item.itemName} cannot be equipped!");
+                    }
+                });
+            }
+            else
+            {
+                // Empty slot 
+                slot.AddToClassList("inventory-slot-empty");
+            }
+
             inventoryGrid.Add(slot);
         }
     }
