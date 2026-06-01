@@ -985,7 +985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df8edfa9e056b654c8c0c498393359a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuController
-  introVideo: {fileID: 32900000, guid: 73de7c603b7f34848812e97c980a6614, type: 3}
+  introVideo: {fileID: 32900000, guid: 1e6dade2be3af3c44b3f1b01718f4eec, type: 3}
   cutsceneSceneName: CutsceneScene
 --- !u!1 &1504565312
 GameObject:

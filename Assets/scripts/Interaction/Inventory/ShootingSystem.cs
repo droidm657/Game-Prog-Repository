@@ -82,8 +82,20 @@ public class ShootingSystem : MonoBehaviour
         }
 
         // Shoot
-        if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime && !isReloading)
-            Shoot();
+        if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime && !isReloading) 
+        {
+            // 1. SAFEGUARD: Don't shoot if the game is paused (Time.timeScale is 0)
+            if (Time.timeScale == 0f) return;
+
+        // 2. SAFEGUARD: Don't shoot if the mouse pointer is clicking on a UI element (Inventory/Pause Menu)
+        if (UnityEngine.EventSystems.EventSystem.current != null &&
+            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            return; // Block the shot because they are interacting with the UI!
+        }
+            Shoot(); 
+        }
+
 
         // Reload
         if (Input.GetKeyDown(reloadKey) && !isReloading && currentChamber < maxChamberSize)

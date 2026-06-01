@@ -33,12 +33,15 @@ public class GateDialogueTrigger : MonoBehaviour
     private bool hasShotgunTriggered = false;
     private bool lockBrokenTriggered = false;
 
+    // NEW FLAG: Tracks if the lock has actually been shot and destroyed
+    private bool isLockBroken = false;
+
     public ItemData shotgunItem;
 
-    // Call this from Lock.cs when lock breaks
+    // Call this from Lock.cs when the lock breaks
     public void OnLockBroken()
     {
-        lockBrokenTriggered = false; // reset so it triggers again
+        isLockBroken = true;
     }
 
     void Update()
@@ -49,24 +52,32 @@ public class GateDialogueTrigger : MonoBehaviour
 
         bool hasShotgun = InventorySystem.Instance.HasItem(shotgunItem);
 
-        if (hasShotgun && !lockBrokenTriggered)
+        // PRIORITY 1: The lock is physically destroyed
+        if (isLockBroken)
         {
-            // Lock just broken dialogue
             if (!lockBrokenTriggered)
             {
                 lockBrokenTriggered = true;
                 DialogueSystem.Instance.StartDialogue(lockBrokenLines);
             }
         }
-        else if (hasShotgun && !hasShotgunTriggered)
+        // PRIORITY 2: Lock is still intact, but the player holds the shotgun
+        else if (hasShotgun)
         {
-            hasShotgunTriggered = true;
-            DialogueSystem.Instance.StartDialogue(hasShotgunLines);
+            if (!hasShotgunTriggered)
+            {
+                hasShotgunTriggered = true;
+                DialogueSystem.Instance.StartDialogue(hasShotgunLines);
+            }
         }
-        else if (!hasShotgun && !noShotgunTriggered)
+        // PRIORITY 3: Lock is intact and player has no shotgun
+        else if (!hasShotgun)
         {
-            noShotgunTriggered = true;
-            DialogueSystem.Instance.StartDialogue(noShotgunLines);
+            if (!noShotgunTriggered)
+            {
+                noShotgunTriggered = true;
+                DialogueSystem.Instance.StartDialogue(noShotgunLines);
+            }
         }
     }
 
