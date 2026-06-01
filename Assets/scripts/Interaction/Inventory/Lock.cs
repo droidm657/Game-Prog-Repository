@@ -31,12 +31,12 @@ public class Lock : MonoBehaviour
             breakSound.Play();
 
         // Notify gate dialogue
-        GateDialogueTrigger trigger = FindObjectOfType<GateDialogueTrigger>();
+        GateDialogueTrigger trigger = FindAnyObjectByType<GateDialogueTrigger>();
         if (trigger != null)
             trigger.OnLockBroken();
 
         // Notify gate interact
-        GateInteraction gate = FindObjectOfType<GateInteraction>();
+        GateInteraction gate = FindAnyObjectByType<GateInteraction>();
         if (gate != null)
             gate.UnlockGate();
 

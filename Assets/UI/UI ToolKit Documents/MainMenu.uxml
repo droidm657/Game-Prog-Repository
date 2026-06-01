@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/UI%20ToolKit%20Documents/MainMenu.uss?fileID=7433441132597879392&amp;guid=73b373036a5962e4c9942db548da9c8f&amp;type=3#MainMenu"/>
+    <Style src="project://database/Assets/UI/UI%20ToolKit%20Documents/PauseMenu.uss?fileID=7433441132597879392&amp;guid=fea0bdd4e967b3c409f9e406f9851c4e&amp;type=3#PauseMenu"/>
+    <ui:VisualElement name="main-menu-container" picking-mode="Ignore" class="main-menu-container">
+        <ui:VisualElement name="menu-left-panel" class="main-menu-left-panel">
+            <ui:Label text="Fallen to Prey" class="main-menu-title"/>
+            <ui:Label text="A Gentleman&apos;s tail does not lie" class="main-menu-subtitle"/>
+            <ui:VisualElement class="menu-spacer"/>
+            <ui:Button name="play-button" text="Play" class="menu-button"/>
+            <ui:Button name="settings-button" text="Settings" class="menu-button"/>
+            <ui:Button name="quit-button" text="Quit" class="menu-button"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
