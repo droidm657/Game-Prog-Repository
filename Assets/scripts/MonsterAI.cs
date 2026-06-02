@@ -4,6 +4,8 @@ using System.Collections;
 
 public class MonsterAI : MonoBehaviour
 {
+    private Animator animator;
+
     [Header("REFERENCES")]
     public Transform player;
 
@@ -103,6 +105,7 @@ public class MonsterAI : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
         if (agent.isOnNavMesh)
         {
@@ -117,6 +120,16 @@ public class MonsterAI : MonoBehaviour
         if (!agent.isOnNavMesh || stunned)
             return;
 
+        if (animator != null)
+        {
+            bool isMoving =
+                agent.velocity.magnitude > 0.1f;
+
+            animator.SetBool(
+                "IsWalking",
+                isMoving
+            );
+        }
         // SOUND REACTION
         if (reactingToNoise)
         {
@@ -228,6 +241,7 @@ public class MonsterAI : MonoBehaviour
 
                                     searchTimer =
                                         searchDuration;
+
                                 }
                             }
                         }
@@ -270,6 +284,15 @@ public class MonsterAI : MonoBehaviour
                     player.position
                 );
 
+
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "IsAttacking",
+                    killCheckDistance <= 2.5f
+                );
+            }
+
             // PLAYER CAUGHT
             if (killCheckDistance <= killDistance &&
     !killingPlayer)
@@ -307,6 +330,13 @@ public class MonsterAI : MonoBehaviour
             // LOST PLAYER
             if (memoryTimer <= 0)
             {
+                if (animator != null)
+                {
+                    animator.SetBool(
+                        "IsAttacking",
+                        false
+                    );
+                }
                 chasingPlayer = false;
 
                 searching = true;
