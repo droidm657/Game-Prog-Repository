@@ -45,34 +45,51 @@ public class ShootingSystem : MonoBehaviour
         else
             Destroy(gameObject);
     }
+    void Start()
+    {
+        currentChamber = maxChamberSize;
+    }
 
     void Update()
     {
-        canShoot = EquippingSystem.Instance.HasItemEquipped() &&
-                   EquippingSystem.Instance.GetEquippedItem().itemType
-                   == ItemData.ItemType.Weapon;
+        // Safety checks
+        if (EquippingSystem.Instance == null)
+            return;
+
+        ItemData equippedItem =
+            EquippingSystem.Instance.GetEquippedItem();
+
+        canShoot = false;
+
+        if (equippedItem != null)
+        {
+            canShoot =
+                equippedItem.itemType ==
+                ItemData.ItemType.Weapon;
+        }
 
         if (canShoot && shotgunAnimator == null)
         {
-            shotgunAnimator = EquippingSystem.Instance
-                .GetEquippedObject()
-                ?.GetComponent<Animator>();
-
             GameObject shotgun =
                 EquippingSystem.Instance
                 .GetEquippedObject();
 
             if (shotgun != null)
             {
+                shotgunAnimator =
+                    shotgun.GetComponent<Animator>();
+
                 Transform foundMuzzle =
-                    shotgun.transform.Find("MuzzlePoint");
+                    shotgun.transform.Find(
+                        "MuzzlePoint"
+                    );
 
                 if (foundMuzzle != null)
-                    muzzlePoint = foundMuzzle;
+                {
+                    muzzlePoint =
+                        foundMuzzle;
+                }
             }
-
-            if (currentChamber == 0)
-                currentChamber = maxChamberSize;
         }
 
         if (!canShoot)
@@ -82,28 +99,40 @@ public class ShootingSystem : MonoBehaviour
         }
 
         // Shoot
-        if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime && !isReloading) 
+        if (
+            Input.GetMouseButtonDown(0) &&
+            Time.time >= nextFireTime &&
+            !isReloading
+        )
         {
-            // 1. SAFEGUARD: Don't shoot if the game is paused (Time.timeScale is 0)
-            if (Time.timeScale == 0f) return;
+            if (Time.timeScale == 0f)
+                return;
 
-        // 2. SAFEGUARD: Don't shoot if the mouse pointer is clicking on a UI element (Inventory/Pause Menu)
-        if (UnityEngine.EventSystems.EventSystem.current != null &&
-            UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-        {
-            return; // Block the shot because they are interacting with the UI!
-        }
-            Shoot(); 
-        }
+            if (
+                UnityEngine.EventSystems
+                .EventSystem.current != null &&
+                UnityEngine.EventSystems
+                .EventSystem.current
+                .IsPointerOverGameObject()
+            )
+            {
+                return;
+            }
 
+            Shoot();
+        }
 
         // Reload
-        if (Input.GetKeyDown(reloadKey) && !isReloading && currentChamber < maxChamberSize)
+        if (
+            Input.GetKeyDown(reloadKey) &&
+            !isReloading &&
+            currentChamber < maxChamberSize
+        )
+        {
             StartCoroutine(Reload());
+        }
 
-        // Auto reload when empty
-        if (currentChamber <= 0 && !isReloading)
-            StartCoroutine(Reload());
+       
     }
 
     void Shoot()
@@ -114,30 +143,19 @@ public class ShootingSystem : MonoBehaviour
             return;
         }
 
-        if (!AmmoSystem.Instance.UseAmmo(shotsPerShell))
-        {
-            Debug.Log("No ammo to reload with!");
-            return;
-        }
-
         nextFireTime = Time.time + 1f / fireRate;
+
         currentChamber--;
 
-        Debug.Log($"Shot fired! Chamber: {currentChamber}/{maxChamberSize}");
+        Debug.Log(
+            $"Shot fired! Chamber: {currentChamber}/{maxChamberSize}"
+        );
 
-        // Play shoot animation
         if (shotgunAnimator != null)
             shotgunAnimator.SetTrigger("Shoot");
 
         if (shootSound != null)
             shootSound.Play();
-
-        // Raycast
-        Ray ray = playerCamera.ScreenPointToRay(
-            new Vector3(Screen.width / 2, Screen.height / 2, 0)
-        );
-
-        Debug.DrawRay(ray.origin, ray.direction * shootRange, Color.red, 1f);
 
         for (int i = 0; i < pelletsPerShot; i++)
         {
@@ -168,10 +186,13 @@ public class ShootingSystem : MonoBehaviour
 
             Vector3 endPoint;
 
-            if (Physics.Raycast(
-                spreadRay,
-                out RaycastHit hit,
-                shootRange))
+            if (
+                Physics.Raycast(
+                    spreadRay,
+                    out RaycastHit hit,
+                    shootRange
+                )
+            )
             {
                 endPoint = hit.point;
 
@@ -179,15 +200,27 @@ public class ShootingSystem : MonoBehaviour
                     hit.collider.GetComponent<HealthSystem>();
 
                 if (health != null)
+                {
                     health.TakeDamage(
                         damagePerShot
                     );
+                }
+
+                BasicMonsterAI monster =
+                    hit.collider.GetComponentInParent<BasicMonsterAI>();
+
+                if (monster != null)
+                {
+                    monster.StunMonster(5f);
+                }
 
                 Lock lockComponent =
                     hit.collider.GetComponent<Lock>();
 
                 if (lockComponent != null)
+                {
                     lockComponent.ShootLock();
+                }
             }
             else
             {
@@ -197,15 +230,22 @@ public class ShootingSystem : MonoBehaviour
                     shootRange;
             }
 
-            StartCoroutine(
-                SpawnTracer(
-                    muzzlePoint.position,
-                    endPoint
-                )
-            );
-
-            UIManager.Instance?.UpdateAmmoDisplay(currentChamber,currentChamber,AmmoSystem.Instance.GetAmmo());
+            if (muzzlePoint != null)
+            {
+                StartCoroutine(
+                    SpawnTracer(
+                        muzzlePoint.position,
+                        endPoint
+                    )
+                );
+            }
         }
+
+        UIManager.Instance?.UpdateAmmoDisplay(
+            currentChamber,
+            currentChamber,
+            AmmoSystem.Instance.GetAmmo()
+        );
     }
 
     IEnumerator Reload()

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemID: 0
   itemName: lamp
-  itemIcon: {fileID: 0}
-  objectPrefab: {fileID: 203211323996476850, guid: 48d1c73a7271bb54284e34e4425547e9, type: 3}
+  itemIcon: {fileID: 21300000, guid: f9448d31d64ca09449905aade419e0af, type: 3}
+  objectPrefab: {fileID: 693000817474607861, guid: 9330d4dea323ebc47ae11a2db0a3ea91, type: 3}
   itemType: 4
   isEquippable: 1
   equipPositionOffset: {x: 0.2, y: -0.9, z: 0.5}
@@ -23,3 +23,5 @@ MonoBehaviour:
   isAmmo: 0
   ammoCount: 0
   isConsumable: 0
+  consumableCount: 0
+  isKeyItem: 0
