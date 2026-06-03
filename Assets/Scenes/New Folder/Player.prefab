@@ -64,11 +64,9 @@ GameObject:
   - component: {fileID: 160885012194764163}
   - component: {fileID: 7236993597756223736}
   - component: {fileID: 2507573146659432474}
-  - component: {fileID: 3257849442376441696}
   - component: {fileID: 6883008025800968646}
   - component: {fileID: 8109646798962784226}
   - component: {fileID: 8621529110822010247}
-  - component: {fileID: 944511879988007594}
   - component: {fileID: 3258005303829992107}
   m_Layer: 0
   m_Name: Player
@@ -219,20 +217,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3257849442376441696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1432376531369006228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f310f697192e6148816f896265322d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventorySystem
-  maxInventorySize: 10
-  items: []
 --- !u!114 &6883008025800968646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,18 +289,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquippingSystem
   handTransform: {fileID: 1548514619439821524}
---- !u!114 &944511879988007594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1432376531369006228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5003ca2219f73b24c9dcba5c232b7ec1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AmmoSystem
 --- !u!114 &3258005303829992107
 MonoBehaviour:
   m_ObjectHideFlags: 0
