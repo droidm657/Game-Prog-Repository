@@ -10,7 +10,7 @@ public class AmmoSystem : MonoBehaviour
 
     void start()
     {
-        currentAmmo = 0;
+        currentAmmo = 6;
         Debug.Log($"Starting Ammo: {currentAmmo}");
     }
 

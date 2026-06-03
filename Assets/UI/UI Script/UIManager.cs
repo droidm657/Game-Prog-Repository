@@ -38,7 +38,7 @@ public class UIManager : MonoBehaviour
         uiDocument = GetComponent<UIDocument>();
     }
 
-    void OnEnabled  ()
+    void OnEnable()
     {
         // Listen for scene changes to re-query UI elements
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -52,7 +52,17 @@ public class UIManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        InitializeUI();
+        // If we are on the Main Menu or a Cutscene, turn off our UI Document entirely!
+        if (scene.name == "MainMenuScene" || scene.name == "CutsceneScene")
+        {
+            if (uiDocument != null) uiDocument.rootVisualElement.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            // We are in gameplay Turn the HUD back on!
+            if (uiDocument != null) uiDocument.rootVisualElement.style.display = DisplayStyle.Flex;
+            InitializeUI();
+        }
     }
 
     void InitializeUI()
