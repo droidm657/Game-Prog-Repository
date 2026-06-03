@@ -1,8 +1,9 @@
 // DialogueSystem.cs
-using UnityEngine;
-using UnityEngine.UIElements;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement; 
+using UnityEngine.UIElements;
 using Label = UnityEngine.UIElements.Label;
 using Debug = UnityEngine.Debug;
 
@@ -25,14 +26,46 @@ public class DialogueSystem : MonoBehaviour
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject); // Persist across scenes
+        }
         else
+        {
             Destroy(gameObject);
+            return;
+        }
     }
 
-    void Start()
+    void OnEnable()
     {
-        var root = GetComponent<UIDocument>().rootVisualElement;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        InitializeDialogueUI();
+    }
+
+    void InitializeDialogueUI()
+    {
+        // Find the active UI Document in the newly loaded scene
+        UIDocument uiDoc = FindAnyObjectByType<UIDocument>();
+
+        if (uiDoc == null || uiDoc.rootVisualElement == null)
+        {
+            Debug.LogWarning("DialogueSystem: No UIDocument found in this scene!");
+            return;
+        }
+
+        var root = uiDoc.rootVisualElement;
+
+        // Re-target the visual elements in the fresh scene
         dialogueContainer = root.Q<VisualElement>("dialogue-container");
         dialogueText = root.Q<Label>("dialogue-text");
         dialogueContinue = root.Q<Label>("dialogue-continue");
@@ -48,11 +81,8 @@ public class DialogueSystem : MonoBehaviour
         {
             if (isTyping)
             {
-                // Skip typing animation
                 StopCoroutine(typingCoroutine);
-                dialogueText.text = dialogueQueue.Count > 0
-                    ? dialogueQueue.Peek()
-                    : dialogueText.text;
+                dialogueText.text = dialogueQueue.Count > 0 ? dialogueQueue.Peek() : dialogueText.text;
                 isTyping = false;
                 dialogueContinue.style.display = DisplayStyle.Flex;
             }
@@ -69,19 +99,18 @@ public class DialogueSystem : MonoBehaviour
 
     public void StartDialogue(string[] lines)
     {
-        // Freeze player input during dialogue
         Time.timeScale = 1f;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
 
-        // Disable shooting while talking
-        ShootingSystem.Instance.enabled = false;
+        if (ShootingSystem.Instance != null)
+            ShootingSystem.Instance.enabled = false;
 
         dialogueQueue.Clear();
         foreach (string line in lines)
             dialogueQueue.Enqueue(line);
 
         isDialogueOpen = true;
-        dialogueContainer.style.display = DisplayStyle.Flex;
+        if (dialogueContainer != null) dialogueContainer.style.display = DisplayStyle.Flex;
         ShowNextLine();
     }
 
@@ -94,7 +123,7 @@ public class DialogueSystem : MonoBehaviour
         }
 
         string line = dialogueQueue.Dequeue();
-        dialogueContinue.style.display = DisplayStyle.None;
+        if (dialogueContinue != null) dialogueContinue.style.display = DisplayStyle.None;
 
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
@@ -105,32 +134,31 @@ public class DialogueSystem : MonoBehaviour
     IEnumerator TypeLine(string line)
     {
         isTyping = true;
-        dialogueText.text = "";
+        if (dialogueText != null) dialogueText.text = "";
 
         foreach (char c in line)
         {
-            dialogueText.text += c;
+            if (dialogueText != null) dialogueText.text += c;
             yield return new WaitForSeconds(typingSpeed);
         }
 
         isTyping = false;
-        dialogueContinue.style.display = DisplayStyle.Flex;
-
-        // Auto show continue prompt
-        if (dialogueQueue.Count == 0)
-            dialogueContinue.text = "Press E to close";
-        else
-            dialogueContinue.text = "Press E to continue";
+        if (dialogueContinue != null)
+        {
+            dialogueContinue.style.display = DisplayStyle.Flex;
+            dialogueContinue.text = (dialogueQueue.Count == 0) ? "Press E to close" : "Press E to continue";
+        }
     }
 
     void HideDialogue()
     {
         isDialogueOpen = false;
-        dialogueContainer.style.display = DisplayStyle.None;
+        if (dialogueContainer != null) dialogueContainer.style.display = DisplayStyle.None;
         dialogueQueue.Clear();
 
-        // Re-enable shooting
-        ShootingSystem.Instance.enabled = true;
+        if (ShootingSystem.Instance != null)
+            ShootingSystem.Instance.enabled = true;
     }
+
     public bool IsDialogueOpen() => isDialogueOpen;
 }

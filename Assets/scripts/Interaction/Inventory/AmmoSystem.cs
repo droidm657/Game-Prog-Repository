@@ -10,16 +10,21 @@ public class AmmoSystem : MonoBehaviour
 
     void start()
     {
-        currentAmmo = 6;
+        currentAmmo = 0;
         Debug.Log($"Starting Ammo: {currentAmmo}");
     }
 
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         else
+        {
             Destroy(gameObject);
+        }
     }
 
     public void AddAmmo(int amount)

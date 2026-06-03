@@ -1,7 +1,8 @@
-using System.Diagnostics;
+// ShootingSystem.cs
+using System.Collections;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
-using System.Collections;
+using Random = UnityEngine.Random;
 
 public class ShootingSystem : MonoBehaviour
 {
@@ -40,11 +41,10 @@ public class ShootingSystem : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+        // Force the active weapon tracking system to always point to THIS local player
+        Instance = this;
     }
+
     void Start()
     {
         currentChamber = maxChamberSize;
@@ -56,65 +56,49 @@ public class ShootingSystem : MonoBehaviour
         if (EquippingSystem.Instance == null)
             return;
 
-        ItemData equippedItem =
-            EquippingSystem.Instance.GetEquippedItem();
+        ItemData equippedItem = EquippingSystem.Instance.GetEquippedItem();
 
         canShoot = false;
 
         if (equippedItem != null)
         {
-            canShoot =
-                equippedItem.itemType ==
-                ItemData.ItemType.Weapon;
+            canShoot = equippedItem.itemType == ItemData.ItemType.Weapon;
         }
 
+        // If weapon is equipped, handle getting the local references
         if (canShoot && shotgunAnimator == null)
         {
-            GameObject shotgun =
-                EquippingSystem.Instance
-                .GetEquippedObject();
+            GameObject shotgun = EquippingSystem.Instance.GetEquippedObject();
 
             if (shotgun != null)
             {
-                shotgunAnimator =
-                    shotgun.GetComponent<Animator>();
-
-                Transform foundMuzzle =
-                    shotgun.transform.Find(
-                        "MuzzlePoint"
-                    );
+                shotgunAnimator = shotgun.GetComponent<Animator>();
+                Transform foundMuzzle = shotgun.transform.Find("MuzzlePoint");
 
                 if (foundMuzzle != null)
                 {
-                    muzzlePoint =
-                        foundMuzzle;
+                    muzzlePoint = foundMuzzle;
                 }
             }
         }
 
         if (!canShoot)
         {
+            // Crucial: Clear these references so if we swap weapons or scenes,
+            // the system is forced to look for the fresh components again.
             shotgunAnimator = null;
+            muzzlePoint = null;
             return;
         }
 
-        // Shoot
-        if (
-            Input.GetMouseButtonDown(0) &&
-            Time.time >= nextFireTime &&
-            !isReloading
-        )
+        // Shoot input
+        if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime && !isReloading)
         {
             if (Time.timeScale == 0f)
                 return;
 
-            if (
-                UnityEngine.EventSystems
-                .EventSystem.current != null &&
-                UnityEngine.EventSystems
-                .EventSystem.current
-                .IsPointerOverGameObject()
-            )
+            if (UnityEngine.EventSystems.EventSystem.current != null &&
+                UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
                 return;
             }
@@ -122,17 +106,11 @@ public class ShootingSystem : MonoBehaviour
             Shoot();
         }
 
-        // Reload
-        if (
-            Input.GetKeyDown(reloadKey) &&
-            !isReloading &&
-            currentChamber < maxChamberSize
-        )
+        // Reload input
+        if (Input.GetKeyDown(reloadKey) && !isReloading && currentChamber < maxChamberSize)
         {
             StartCoroutine(Reload());
         }
-
-       
     }
 
     void Shoot()
@@ -144,12 +122,9 @@ public class ShootingSystem : MonoBehaviour
         }
 
         nextFireTime = Time.time + 1f / fireRate;
-
         currentChamber--;
 
-        Debug.Log(
-            $"Shot fired! Chamber: {currentChamber}/{maxChamberSize}"
-        );
+        Debug.Log($"Shot fired! Chamber: {currentChamber}/{maxChamberSize}");
 
         if (shotgunAnimator != null)
             shotgunAnimator.SetTrigger("Shoot");
@@ -159,64 +134,32 @@ public class ShootingSystem : MonoBehaviour
 
         for (int i = 0; i < pelletsPerShot; i++)
         {
-            Vector3 spreadDirection =
-                playerCamera.transform.forward;
+            Vector3 spreadDirection = playerCamera.transform.forward;
 
-            spreadDirection +=
-                playerCamera.transform.right *
-                Random.Range(
-                    -spreadAngle,
-                    spreadAngle
-                ) * 0.01f;
-
-            spreadDirection +=
-                playerCamera.transform.up *
-                Random.Range(
-                    -spreadAngle,
-                    spreadAngle
-                ) * 0.01f;
-
+            spreadDirection += playerCamera.transform.right * Random.Range(-spreadAngle, spreadAngle) * 0.01f;
+            spreadDirection += playerCamera.transform.up * Random.Range(-spreadAngle, spreadAngle) * 0.01f;
             spreadDirection.Normalize();
 
-            Ray spreadRay =
-                new Ray(
-                    playerCamera.transform.position,
-                    spreadDirection
-                );
-
+            Ray spreadRay = new Ray(playerCamera.transform.position, spreadDirection);
             Vector3 endPoint;
 
-            if (
-                Physics.Raycast(
-                    spreadRay,
-                    out RaycastHit hit,
-                    shootRange
-                )
-            )
+            if (Physics.Raycast(spreadRay, out RaycastHit hit, shootRange))
             {
                 endPoint = hit.point;
 
-                HealthSystem health =
-                    hit.collider.GetComponent<HealthSystem>();
-
+                HealthSystem health = hit.collider.GetComponent<HealthSystem>();
                 if (health != null)
                 {
-                    health.TakeDamage(
-                        damagePerShot
-                    );
+                    health.TakeDamage(damagePerShot);
                 }
 
-                BasicMonsterAI monster =
-                    hit.collider.GetComponentInParent<BasicMonsterAI>();
-
+                BasicMonsterAI monster = hit.collider.GetComponentInParent<BasicMonsterAI>();
                 if (monster != null)
                 {
                     monster.StunMonster(5f);
                 }
 
-                Lock lockComponent =
-                    hit.collider.GetComponent<Lock>();
-
+                Lock lockComponent = hit.collider.GetComponent<Lock>();
                 if (lockComponent != null)
                 {
                     lockComponent.ShootLock();
@@ -224,36 +167,29 @@ public class ShootingSystem : MonoBehaviour
             }
             else
             {
-                endPoint =
-                    spreadRay.origin +
-                    spreadRay.direction *
-                    shootRange;
+                endPoint = spreadRay.origin + spreadRay.direction * shootRange;
             }
 
             if (muzzlePoint != null)
             {
-                StartCoroutine(
-                    SpawnTracer(
-                        muzzlePoint.position,
-                        endPoint
-                    )
-                );
+                StartCoroutine(SpawnTracer(muzzlePoint.position, endPoint));
             }
         }
 
         UIManager.Instance?.UpdateAmmoDisplay(
             currentChamber,
             currentChamber,
-            AmmoSystem.Instance.GetAmmo()
+            AmmoSystem.Instance != null ? AmmoSystem.Instance.GetAmmo() : 0
         );
     }
 
     IEnumerator Reload()
     {
+        if (AmmoSystem.Instance == null) yield break;
+
         isReloading = true;
         Debug.Log("Reloading...");
 
-        // Play reload animation
         if (shotgunAnimator != null)
             shotgunAnimator.SetTrigger("Reload");
 
@@ -262,7 +198,6 @@ public class ShootingSystem : MonoBehaviour
 
         yield return new WaitForSeconds(reloadTime);
 
-        // Calculate how many shells to load
         int needed = maxChamberSize - currentChamber;
         int available = AmmoSystem.Instance.GetAmmo();
         int toLoad = Mathf.Min(needed, available);
@@ -278,40 +213,28 @@ public class ShootingSystem : MonoBehaviour
             Debug.Log("No ammo to reload with!");
         }
 
-        UIManager.Instance?.UpdateAmmoDisplay(currentChamber,currentChamber,AmmoSystem.Instance.GetAmmo());
-
+        UIManager.Instance?.UpdateAmmoDisplay(currentChamber, currentChamber, AmmoSystem.Instance.GetAmmo());
         isReloading = false;
     }
 
-    IEnumerator SpawnTracer(
-    Vector3 startPos,
-    Vector3 endPos)
+    IEnumerator SpawnTracer(Vector3 startPos, Vector3 endPos)
     {
-        GameObject tracer =
-            new GameObject("Tracer");
+        GameObject tracer = new GameObject("Tracer");
+        LineRenderer lr = tracer.AddComponent<LineRenderer>();
 
-        LineRenderer lr =
-            tracer.AddComponent<LineRenderer>();
-
-        lr.material =
-            tracerMaterial;
-
+        lr.material = tracerMaterial;
         lr.positionCount = 2;
-
         lr.startWidth = 0.03f;
         lr.endWidth = 0.01f;
-
         lr.useWorldSpace = true;
 
         lr.SetPosition(0, startPos);
         lr.SetPosition(1, endPos);
 
-        yield return new WaitForSeconds(
-            tracerDuration
-        );
-
+        yield return new WaitForSeconds(tracerDuration);
         Destroy(tracer);
     }
+
     public int GetCurrentChamber() => currentChamber;
     public int GetMaxChamber() => maxChamberSize;
     public bool IsReloading() => isReloading;

@@ -16,10 +16,8 @@ public class EquippingSystem : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
+        // Force the active player instance to always be THIS local script instance
+        Instance = this;
     }
 
     public void EquipItem(ItemData item)
@@ -45,11 +43,19 @@ public class EquippingSystem : MonoBehaviour
             currentEquippedItem = item;
             Debug.Log($"Equipped: {item.itemName}");
         }
+
+        // Note: Make sure ShootingSystem.Instance also updates its Awake() like this script 
+        // so it doesn't return null errors when changing scenes!
         if (item.itemType == ItemData.ItemType.Weapon)
-            UIManager.Instance?.UpdateAmmoDisplay(
-                ShootingSystem.Instance.GetCurrentChamber(),
-                ShootingSystem.Instance.GetCurrentChamber(),
-                AmmoSystem.Instance.GetAmmo());
+        {
+            if (ShootingSystem.Instance != null && AmmoSystem.Instance != null)
+            {
+                UIManager.Instance?.UpdateAmmoDisplay(
+                    ShootingSystem.Instance.GetCurrentChamber(),
+                    ShootingSystem.Instance.GetCurrentChamber(),
+                    AmmoSystem.Instance.GetAmmo());
+            }
+        }
     }
 
     public void UnequipCurrent()

@@ -1,6 +1,7 @@
 // UIManager.cs
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 using Label = UnityEngine.UIElements.Label;
 
 public class UIManager : MonoBehaviour
@@ -24,15 +25,48 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            DontDestroyOnLoad(gameObject); // Persist across scenes
+        }
         else
+        {
             Destroy(gameObject);
+            return; // Ensure only one instance exists
+        }
 
         uiDocument = GetComponent<UIDocument>();
     }
 
-    void Start()
+    void OnEnabled  ()
     {
+        // Listen for scene changes to re-query UI elements
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        // Unsubscribe to prevent memory leaks
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        InitializeUI();
+    }
+
+    void InitializeUI()
+    {
+        if (uiDocument == null) 
+        { 
+            uiDocument = FindAnyObjectByType<UIDocument>(); 
+        }
+
+        if (uiDocument == null || uiDocument.rootVisualElement == null) 
+        { 
+            Debug.LogError("UIManager: UIDocument or rootVisualElement not found!"); return; 
+        }
+
         var root = uiDocument.rootVisualElement;
         pickupPrompt = root.Q<VisualElement>("pickup-prompt");
         pickupText = root.Q<Label>("pickup-text");

@@ -15,9 +15,16 @@ public class InventorySystem : MonoBehaviour
     void Awake()
     {
         if (Instance == null)
+        {
             Instance = this;
+            // This keeps the Inventory
+            DontDestroyOnLoad(gameObject);
+        }
         else
+        {
             Destroy(gameObject);
+            return;
+        }
     }
 
     public bool AddItem(ItemData item)
