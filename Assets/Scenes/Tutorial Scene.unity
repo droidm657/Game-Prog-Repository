@@ -1497,7 +1497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c33046afa4e4c34aa14867f28f7354a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransitionDoor
-  sceneToLoad: maingamescene
+  sceneToLoad: Interior Castle Scene
   interactionKey: 101
   promptMessage: Enter
 --- !u!65 &9099571616800722413
