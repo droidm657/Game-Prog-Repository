@@ -85,9 +85,17 @@ public class UIManager : MonoBehaviour
         ammoContainer = root.Q<VisualElement>("ammo-container");
         ammoText = root.Q<UnityEngine.UIElements.Label>("ammo-text");
 
+        healthBarFill = root.Q<VisualElement>("health-bar-fill");
+        healthContainer = root.Q<VisualElement>("health-container");
+
         // Hide at start
         HidePickupPrompt();
         HideAmmo();
+
+        if (HealthSystem.Instance != null)
+        {
+            UpdateHealthBar(HealthSystem.Instance.GetHealthPercent());
+        }
     }
 
     public void UpdateHealthBar(float percent)

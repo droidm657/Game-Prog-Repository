@@ -20,3 +20,8 @@ MonoBehaviour:
   isEquippable: 1
   equipPositionOffset: {x: 0.3, y: -0.2, z: 0.5}
   equipRotationOffset: {x: -88, y: 0, z: 0}
+  isAmmo: 0
+  ammoCount: 0
+  isConsumable: 0
+  healthRestoreAmount: 0
+  isDiscardable: 0

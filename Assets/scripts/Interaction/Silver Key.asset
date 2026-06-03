@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 802e8d6259f907c438ed25289ae440ca, type: 3}
-  m_Name: Lamp
+  m_Name: Silver Key
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 1
-  itemName: Lamp
-  itemIcon: {fileID: 21300000, guid: f9448d31d64ca09449905aade419e0af, type: 3}
-  objectPrefab: {fileID: 5922435898735396081, guid: d339f214665c4bd42b40828d58df63f5, type: 3}
+  itemID: 4
+  itemName: Escape Key
+  itemIcon: {fileID: 21300000, guid: 5dc6952e7230a6e4781a63d2aa873780, type: 3}
+  objectPrefab: {fileID: 7076423847062086606, guid: 40f553a72ed663342bffc65e3c529708, type: 3}
   itemType: 2
-  isEquippable: 1
-  equipPositionOffset: {x: 0.08, y: 0, z: 0.5}
-  equipRotationOffset: {x: -88, y: 0, z: 0}
+  isEquippable: 0
+  equipPositionOffset: {x: 0, y: 0, z: 0}
+  equipRotationOffset: {x: 0, y: 0, z: 0}
   isAmmo: 0
   ammoCount: 0
   isConsumable: 0

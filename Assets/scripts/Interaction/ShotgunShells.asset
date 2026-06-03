@@ -23,3 +23,5 @@ MonoBehaviour:
   isAmmo: 1
   ammoCount: 14
   isConsumable: 0
+  healthRestoreAmount: 0
+  isDiscardable: 0

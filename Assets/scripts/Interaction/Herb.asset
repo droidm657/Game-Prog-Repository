@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 802e8d6259f907c438ed25289ae440ca, type: 3}
-  m_Name: Lamp
+  m_Name: Herb
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 1
-  itemName: Lamp
-  itemIcon: {fileID: 21300000, guid: f9448d31d64ca09449905aade419e0af, type: 3}
-  objectPrefab: {fileID: 5922435898735396081, guid: d339f214665c4bd42b40828d58df63f5, type: 3}
-  itemType: 2
-  isEquippable: 1
-  equipPositionOffset: {x: 0.08, y: 0, z: 0.5}
-  equipRotationOffset: {x: -88, y: 0, z: 0}
+  itemID: 6
+  itemName: Medicinal Herb
+  itemIcon: {fileID: 21300000, guid: dfcf80c8560a4cb44a67a000ebfe7d63, type: 3}
+  objectPrefab: {fileID: 205522964220606608, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+  itemType: 3
+  isEquippable: 0
+  equipPositionOffset: {x: 0, y: 0, z: 0}
+  equipRotationOffset: {x: 0, y: 0, z: 0}
   isAmmo: 0
   ammoCount: 0
-  isConsumable: 0
-  healthRestoreAmount: 0
+  isConsumable: 1
+  healthRestoreAmount: 35
   isDiscardable: 0

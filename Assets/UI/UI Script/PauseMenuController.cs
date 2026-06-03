@@ -1,15 +1,13 @@
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Application = UnityEngine.Application;
 using Debug = UnityEngine.Debug;
 using Label = UnityEngine.UIElements.Label;
 
-
 public class PauseMenuController : MonoBehaviour
 {
-    
     private UIDocument uiDocument;
     private VisualElement menuContainer;
     private VisualElement inventoryGrid;
@@ -19,6 +17,7 @@ public class PauseMenuController : MonoBehaviour
     {
         uiDocument = GetComponent<UIDocument>();
     }
+
     void Start()
     {
         var root = uiDocument.rootVisualElement;
@@ -28,8 +27,8 @@ public class PauseMenuController : MonoBehaviour
         var resumeBtn = root.Q<Button>("resume-button");
         var quitBtn = root.Q<Button>("quit-button");
 
-        Debug.Log(resumeBtn != null ? " Resume found" : "Resume NOT found");
-        Debug.Log(quitBtn != null ? " Quit found" : " Quit NOT found");
+        Debug.Log(resumeBtn != null ? "Resume button found" : "Resume button NOT found");
+        Debug.Log(quitBtn != null ? "Quit button found" : "Quit button NOT found");
 
         if (resumeBtn != null) resumeBtn.clicked += () => ResumeGame();
         if (quitBtn != null) quitBtn.clicked += () => QuitGame();
@@ -49,14 +48,16 @@ public class PauseMenuController : MonoBehaviour
         menuContainer.style.display = isMenuOpen
             ? DisplayStyle.Flex
             : DisplayStyle.None;
+
         Time.timeScale = isMenuOpen ? 0f : 1f;
         UnityEngine.Cursor.lockState = isMenuOpen ? CursorLockMode.None : CursorLockMode.Locked;
         UnityEngine.Cursor.visible = isMenuOpen;
+
         if (isMenuOpen)
             RefreshInventory();
     }
 
-    void RefreshInventory()
+    public void RefreshInventory()
     {
         inventoryGrid.Clear();
 
@@ -71,42 +72,58 @@ public class PauseMenuController : MonoBehaviour
             if (i < items.Count)
             {
                 ItemData item = items[i];
-                // Filled slot
+
+                // Filled slot visuals
                 var icon = new VisualElement();
                 icon.AddToClassList("inventory-icon");
-                if (items[i].itemIcon != null)
-                    icon.style.backgroundImage = new StyleBackground(items[i].itemIcon);
+                if (item.itemIcon != null)
+                    icon.style.backgroundImage = new StyleBackground(item.itemIcon);
 
-                var nameLabel = new UnityEngine.UIElements.Label(items[i].itemName);
+                var nameLabel = new Label(item.itemName);
                 nameLabel.AddToClassList("inventory-label");
 
                 slot.Add(icon);
                 slot.Add(nameLabel);
 
-                if (EquippingSystem.Instance.GetEquippedItem() == item)
+                // Highlight if weapon is equipped
+                if (EquippingSystem.Instance != null && EquippingSystem.Instance.GetEquippedItem() == item)
                     slot.AddToClassList("inventory-slot-equipped");
 
-                // Click to equip
+                // --- INTEGRATED MULTI-TYPE INTERACTION CALLBACK ---
                 slot.RegisterCallback<ClickEvent>(evt =>
                 {
                     if (item.isEquippable)
                     {
-                        if (EquippingSystem.Instance.GetEquippedItem() == item)
-                            EquippingSystem.Instance.UnequipCurrent();
-                        else
-                            EquippingSystem.Instance.EquipItem(item);
+                        if (EquippingSystem.Instance != null)
+                        {
+                            if (EquippingSystem.Instance.GetEquippedItem() == item)
+                                EquippingSystem.Instance.UnequipCurrent();
+                            else
+                                EquippingSystem.Instance.EquipItem(item);
+                        }
 
+                        // Redraw UI to show updated borders
+                        RefreshInventory();
+                    }
+                    else if (item.isConsumable)
+                    {
+                        Debug.Log($"[UI Click] Clicked consumable item: {item.itemName}. Sending request to InventorySystem.");
+
+                        // Fired directly into your safe validation system!
+                        InventorySystem.Instance.UseConsumableItem(item);
+
+                        // Redraw inventory layout slots immediately so consumed item disappears
                         RefreshInventory();
                     }
                     else
                     {
-                        Debug.Log($"{item.itemName} cannot be equipped!");
+                        Debug.Log($"[UI Click] {item.itemName} is neither equippable nor consumable (e.g. Progression Key).");
                     }
                 });
             }
             else
             {
-                // Empty slot 
+                // Empty slot visuals
                 slot.AddToClassList("inventory-slot-empty");
             }
 
@@ -114,12 +131,12 @@ public class PauseMenuController : MonoBehaviour
         }
     }
 
-    void ResumeGame()  
+    void ResumeGame()
     {
         ToggleMenu();
     }
 
-    void QuitGame()   
+    void QuitGame()
     {
         Time.timeScale = 1f;
         Application.Quit();

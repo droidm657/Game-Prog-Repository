@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8562733724555332695
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 945869172333476088}
+  m_Layer: 0
+  m_Name: HerbSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &945869172333476088
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8562733724555332695}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7091513778943514880}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7781064110628338474
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 945869172333476088}
+    m_Modifications:
+    - target: {fileID: 205522964220606608, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_Name
+      value: Herb
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 205522964220606608, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 247244007027276686}
+    - targetCorrespondingSourceObject: {fileID: 205522964220606608, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3510149363053985484}
+  m_SourcePrefab: {fileID: 100100000, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+--- !u!4 &7091513778943514880 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 689607785502843434, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+  m_PrefabInstance: {fileID: 7781064110628338474}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7575563205729518522 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 205522964220606608, guid: b088850399988f24b9db0e46091b60a9, type: 3}
+  m_PrefabInstance: {fileID: 7781064110628338474}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &247244007027276686
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7575563205729518522}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3510149363053985484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7575563205729518522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f161600e3be782c4bac59819d4a543b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldItemPickUp
+  interactionKey: 101
+  promptMessage: Pick up Herb
+  itemData: {fileID: 11400000, guid: db178be6bd6a1fa4c80c72159755dc31, type: 2}
