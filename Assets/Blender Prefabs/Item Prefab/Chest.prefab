@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 6716767908540490819}
   - component: {fileID: 8850197354471248009}
   - component: {fileID: 760492995525991365}
+  - component: {fileID: 8035261393563407189}
   m_Layer: 0
   m_Name: Chest
   m_TagString: Untagged
@@ -288,6 +289,28 @@ MonoBehaviour:
   chestAnimator: {fileID: 1146774433392886302}
   openTriggerName: Open
   interactionKey: 101
-  lootPromptMessage: Open Chest
+  openPromptMessage: Open Chest
+  collectPromptMessage: Take Item
   containedItem: {fileID: 0}
   itemSpawnPoint: {fileID: 9034222320195860771}
+--- !u!135 &8035261393563407189
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7048920575757250908}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.03
+  m_Center: {x: 0, y: 0, z: 0}

@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Interior Castle Scene.unity
     guid: faefc46015e6c1649871e8ca785b7adc
+  - enabled: 1
+    path: Assets/Scenes/Sewer Basement Scene.unity
+    guid: d16afb7847fb92543854367c0ece6370
   m_configObjects: {}

@@ -308,6 +308,50 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5731547941117289742, guid: 15a4bf7de94b19e4b8834d442300217c, type: 3}
+--- !u!1 &325119570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 325119572}
+  - component: {fileID: 325119571}
+  m_Layer: 0
+  m_Name: PlayerSpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &325119571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325119570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3217a4bff6e56ef49be9cf39c03d9a4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawnManager
+--- !u!4 &325119572
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325119570}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 28.82658, y: 0.95288, z: 28.43204}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &329700571 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5164314742027787477, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
@@ -988,6 +1032,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &844245544
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 844245545}
+  m_Layer: 0
+  m_Name: Basement_Ladder_SpawnPoint
+  m_TagString: Respawn
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &844245545
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844245544}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.6532815, y: 0.27059805, z: 0.27059805, w: 0.6532815}
+  m_LocalPosition: {x: -0.0996998, y: -0.26089993, z: 0.19419214}
+  m_LocalScale: {x: 6.616759, y: 6.6167574, z: 6.6167583}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 856684228}
+  m_LocalEulerAnglesHint: {x: 45, y: 90, z: 90}
 --- !u!1 &855744868 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1117180928186601523, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
@@ -1383,6 +1458,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 8662483014145610024, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
+      propertyPath: victorySceneName
+      value: MainMenuScene
+      objectReference: {fileID: 0}
     - target: {fileID: 8665315933649323314, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1409,7 +1488,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5402361886978465513, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 844245545}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5400107248932068910, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
       insertIndex: -1
@@ -1417,6 +1499,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5400107248932068910, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1677182791}
+    - targetCorrespondingSourceObject: {fileID: 5400107248932068910, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1677182794}
     - targetCorrespondingSourceObject: {fileID: 3535854000466292103, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
       insertIndex: -1
       addedObject: {fileID: 733126470}
@@ -1616,6 +1701,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1848930737}
   m_SourcePrefab: {fileID: 100100000, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
+--- !u!4 &856684228 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5402361886978465513, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
+  m_PrefabInstance: {fileID: 856684227}
+  m_PrefabAsset: {fileID: 0}
 --- !u!108 &861802838 stripped
 Light:
   m_CorrespondingSourceObject: {fileID: 3147942124613975752, guid: c111fc1278c5faa4384bf660f1299afc, type: 3}
@@ -2616,9 +2706,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c33046afa4e4c34aa14867f28f7354a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransitionDoor
-  sceneToLoad: 
+  sceneToLoad: Sewer Basement Scene
   interactionKey: 101
   promptMessage: Enter
+  targetSpawnPointName: 
+  requiresEscapeKeys: 0
+  escapeKeyItemData: {fileID: 0}
+  requiredKeyCount: 3
+--- !u!135 &1677182794
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677182786}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.4
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1700465073 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7894022595712095060, guid: 165dc34b5b5b65844ac1e4c024d2c969, type: 3}
@@ -2929,10 +3044,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7048920575757250908, guid: cdabb30f16c96c64d9aa4b1b7093f6f6, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2132919067}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cdabb30f16c96c64d9aa4b1b7093f6f6, type: 3}
 --- !u!95 &1919279369 stripped
 Animator:
@@ -3309,32 +3421,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7771613508976059695, guid: 15a4bf7de94b19e4b8834d442300217c, type: 3}
---- !u!1 &2132919062 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7048920575757250908, guid: cdabb30f16c96c64d9aa4b1b7093f6f6, type: 3}
-  m_PrefabInstance: {fileID: 1919279368}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &2132919067
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2132919062}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.015017682, y: 0.032962903, z: 0.0074189417}
-  m_Center: {x: 6.5959005e-10, y: -0.012195224, z: 0}
 --- !u!1001 &5622929315359476390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3517,7 +3603,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4453270137612308062, guid: 33479c7c59143f54b8777c6e1557ea1e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -3602,3 +3689,4 @@ SceneRoots:
   - {fileID: 1160859016}
   - {fileID: 1089240050}
   - {fileID: 1350181163}
+  - {fileID: 325119572}
