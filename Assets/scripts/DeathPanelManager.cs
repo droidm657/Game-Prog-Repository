@@ -8,19 +8,38 @@ public class DeathPanelManager : MonoBehaviour
     [Header("UI")]
     public GameObject deathPanel;
 
+    private bool playerIsDead = false;
+
     private void Awake()
     {
         Instance = this;
+
+        if (deathPanel != null)
+            deathPanel.SetActive(false);
     }
 
-    private void Start()
+    private void Update()
     {
-        deathPanel.SetActive(false);
+        if (!playerIsDead)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RetryGame();
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            ReturnToMenu();
+        }
     }
 
-    public void ShowDeathPanel()
+    public void ShowDeathScreen()
     {
-        deathPanel.SetActive(true);
+        playerIsDead = true;
+
+        if (deathPanel != null)
+            deathPanel.SetActive(true);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -28,17 +47,20 @@ public class DeathPanelManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public void TryAgain()
+    public void RetryGame()
     {
         Time.timeScale = 1f;
 
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
+        SceneManager.LoadScene("Interior Castle Scene");
     }
 
-    public void ReturnToMainMenu()
+    public void ReturnToMenu()
     {
+        if (InventorySystem.Instance != null)
+        {
+            InventorySystem.Instance.ResetInventory();
+        }
+
         Time.timeScale = 1f;
 
         SceneManager.LoadScene("MainMenuScene");

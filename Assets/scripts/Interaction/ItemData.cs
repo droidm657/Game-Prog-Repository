@@ -25,6 +25,8 @@ public class ItemData : ScriptableObject
     [Header("Security Settings")]
     public bool isDiscardable = true;
 
+    [Header("Death Settings")]
+    public bool keepOnDeath = false;
 
     public enum ItemType
     {

@@ -8,7 +8,7 @@ public class AmmoSystem : MonoBehaviour
 
     private int currentAmmo = 0;
 
-    void start()
+    void Start()
     {
         currentAmmo = 6;
         Debug.Log($"Starting Ammo: {currentAmmo}");
@@ -46,4 +46,6 @@ public class AmmoSystem : MonoBehaviour
     }
 
     public int GetAmmo() => currentAmmo;
+
+
 }

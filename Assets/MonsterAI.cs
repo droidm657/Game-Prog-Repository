@@ -778,7 +778,6 @@ public class MonsterAI : MonoBehaviour
             yield return null;
         }
 
-        DeathPanelManager.Instance
-            .ShowDeathPanel();
+        DeathPanelManager.Instance.ShowDeathScreen();
     }
 }

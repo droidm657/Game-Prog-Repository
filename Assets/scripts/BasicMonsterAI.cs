@@ -23,17 +23,36 @@ public class BasicMonsterAI : MonoBehaviour
     public float chaseSpeed = 8f;
     public float pointReachedDistance = 1f;
 
+    [Header("Kill Settings")]
+    public float killDistance = 2f;
+    public float attackDuration = 3f;
+
     [Header("Stun")]
     public bool isStunned = false;
 
+    [Header("Audio")]
+    public AudioSource monsterAudio;
+    public AudioClip patrolGrowl;
+    public AudioClip spottedRoar;
+
+    private float growlTimer;
+    private bool roarPlayed;
+
     private NavMeshAgent agent;
+    private Animator animator;
+
     private int currentPatrolIndex;
+
     private bool isChasing;
+    private bool isKillingPlayer;
+
     private float lastTimeSawPlayer;
+
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
         agent.acceleration = 60f;
         agent.angularSpeed = 1200f;
@@ -55,20 +74,47 @@ public class BasicMonsterAI : MonoBehaviour
         if (player == null)
             return;
 
+        if (isKillingPlayer)
+            return;
+
+        growlTimer += Time.deltaTime;
+
         float distanceToPlayer =
-            Vector3.Distance(
+                    Vector3.Distance(
                 transform.position,
                 player.position
             );
 
-        // NORMAL DETECTION
+        // Kill player
+        if (distanceToPlayer <= killDistance)
+        {
+            StartCoroutine(KillPlayer());
+            return;
+        }
+
+        // Kill player
         if (distanceToPlayer <= detectionRange)
         {
+            if (!isChasing)
+            {
+                if (
+                    monsterAudio != null &&
+                    spottedRoar != null
+                )
+                {
+                    monsterAudio.PlayOneShot(
+                        spottedRoar
+                    );
+                }
+
+                HorrorAudioManager.Instance?.StartChaseMusic();
+            }
+
             isChasing = true;
             lastTimeSawPlayer = Time.time;
         }
 
-        // FLASHLIGHT DETECTION
+        // Flashlight detection
         if (
             SimpleFlashlight.FlashlightOn &&
             IsInFlashlightBeam()
@@ -78,24 +124,41 @@ public class BasicMonsterAI : MonoBehaviour
             lastTimeSawPlayer = Time.time;
         }
 
-        // LOSE INTEREST
-        if (
-            isChasing &&
-            Time.time - lastTimeSawPlayer >
-            loseInterestTime
-        )
-        {
-            isChasing = false;
-        }
+            // Lose interest
+            if (
+         isChasing &&
+         Time.time - lastTimeSawPlayer >
+         loseInterestTime
+     )
+            {
+                isChasing = false;
 
-        if (isChasing)
+                HorrorAudioManager.Instance?.StopChaseMusic();
+            }
+
+            if (isChasing)
         {
             ChasePlayer();
         }
         else
         {
             Patrol();
+
+            if (
+                monsterAudio != null &&
+                patrolGrowl != null &&
+                growlTimer >= 10f
+            )
+            {
+                monsterAudio.PlayOneShot(
+                    patrolGrowl
+                );
+
+                growlTimer = 0f;
+            }
         }
+
+        UpdateAnimations();
     }
 
     bool IsInFlashlightBeam()
@@ -106,14 +169,12 @@ public class BasicMonsterAI : MonoBehaviour
         Vector3 directionToMonster =
             (
                 transform.position -
-                SimpleFlashlight
-                .FlashlightTransform.position
+                SimpleFlashlight.FlashlightTransform.position
             ).normalized;
 
         float angle =
             Vector3.Angle(
-                SimpleFlashlight
-                .FlashlightTransform.forward,
+                SimpleFlashlight.FlashlightTransform.forward,
                 directionToMonster
             );
 
@@ -122,8 +183,7 @@ public class BasicMonsterAI : MonoBehaviour
 
         if (
             Physics.Raycast(
-                SimpleFlashlight
-                .FlashlightTransform.position,
+                SimpleFlashlight.FlashlightTransform.position,
                 directionToMonster,
                 out RaycastHit hit,
                 flashlightDetectRange
@@ -151,8 +211,7 @@ public class BasicMonsterAI : MonoBehaviour
 
         if (
             !agent.pathPending &&
-            agent.remainingDistance <=
-            pointReachedDistance
+            agent.remainingDistance <= pointReachedDistance
         )
         {
             currentPatrolIndex++;
@@ -182,6 +241,70 @@ public class BasicMonsterAI : MonoBehaviour
         );
     }
 
+    void UpdateAnimations()
+    {
+        if (animator == null)
+            return;
+
+        bool moving =
+            agent.velocity.magnitude > 0.1f;
+
+        animator.SetBool(
+            "iswalking",
+            moving
+        );
+    }
+
+    IEnumerator KillPlayer()
+    {
+        isKillingPlayer = true;
+
+        agent.isStopped = true;
+
+        // Freeze player
+        PlayerController playerController =
+            player.GetComponent<PlayerController>();
+
+        if (playerController != null)
+        {
+            playerController.enabled = false;
+        }
+
+        CharacterController cc =
+            player.GetComponent<CharacterController>();
+
+        if (cc != null)
+        {
+            cc.enabled = false;
+        }
+
+        // Camera effect
+        DeathCameraEffect effect =
+            FindFirstObjectByType<DeathCameraEffect>();
+
+        if (effect != null)
+        {
+            yield return StartCoroutine(
+                effect.ZoomToMonster(transform)
+            );
+        }
+
+        // Attack animation
+        if (animator != null)
+        {
+            animator.SetBool(
+                "Isattacking",
+                true
+            );
+        }
+
+        yield return new WaitForSeconds(
+            attackDuration
+        );
+
+        DeathPanelManager.Instance.ShowDeathScreen();
+    }
+
     public void StunMonster(float duration)
     {
         if (!isStunned)
@@ -207,3 +330,4 @@ public class BasicMonsterAI : MonoBehaviour
         isStunned = false;
     }
 }
+

@@ -23,5 +23,5 @@ MonoBehaviour:
   isAmmo: 0
   ammoCount: 0
   isConsumable: 0
-  consumableCount: 0
-  isKeyItem: 0
+  healthRestoreAmount: 0
+  isDiscardable: 1

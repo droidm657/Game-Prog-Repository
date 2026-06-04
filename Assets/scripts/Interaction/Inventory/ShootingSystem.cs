@@ -13,7 +13,7 @@ public class ShootingSystem : MonoBehaviour
     public int damagePerShot = 25;
     public float fireRate = 1f;
     public int shotsPerShell = 1;
-    public int maxChamberSize = 6;
+    public int maxChamberSize = 2;
 
     [Header("Shotgun Spread")]
     public int pelletsPerShot = 8;

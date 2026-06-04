@@ -11,7 +11,7 @@ public class InventorySystem : MonoBehaviour
     public int maxInventorySize = 10;
     public List<ItemData> items = new List<ItemData>();
 
-    // An event your Inventory Grid UI can listen to for updating the visual squares instantly
+    // Event for refreshing inventory UI
     public event Action OnInventoryChanged;
 
     void Awake()
@@ -28,32 +28,43 @@ public class InventorySystem : MonoBehaviour
         }
     }
 
+    // NEW: Reset inventory on Retry/Menu
+    public void ResetInventory()
+    {
+        for (int i = items.Count - 1; i >= 0; i--)
+        {
+            if (!items[i].keepOnDeath)
+            {
+                items.RemoveAt(i);
+            }
+        }
+
+        Debug.Log("Inventory Reset");
+
+        OnInventoryChanged?.Invoke();
+    }
+
     public void UseConsumableItem(ItemData consumableItem)
     {
-        // 1. Validation checks
         if (consumableItem == null) return;
         if (!consumableItem.isConsumable || !items.Contains(consumableItem)) return;
 
         if (HealthSystem.Instance != null)
         {
-            // 2. The Full Health Safety Net
             if (HealthSystem.Instance.GetHealth() >= HealthSystem.Instance.maxHealth)
             {
                 Debug.Log("Cannot use potion/herb: Health is already maxed out!");
 
-                // Let the player know visually via the UI prompt overlay
                 UIManager.Instance?.ShowPickupPrompt("Health already full!");
-                return; // EXIT EARLY: Potion is saved!
+                return;
             }
 
-            // 3. Match this variable name to your exact ScriptableObject field declaration
             HealthSystem.Instance.Heal(consumableItem.healthRestoreAmount);
 
-            // 4. Consume item and refresh
             RemoveItem(consumableItem);
+
             Debug.Log($"Used {consumableItem.itemName}. Restored {consumableItem.healthRestoreAmount} Health.");
 
-            // Clear prompt text overlay after using
             UIManager.Instance?.HidePickupPrompt();
         }
         else
@@ -74,6 +85,7 @@ public class InventorySystem : MonoBehaviour
                 Debug.Log($"Added {item.ammoCount} ammo from {item.itemName}");
                 return true;
             }
+
             return false;
         }
 
@@ -84,10 +96,11 @@ public class InventorySystem : MonoBehaviour
         }
 
         items.Add(item);
+
         Debug.Log($"Picked up: {item.itemName}");
 
-        // Alert UI grid screens to redraw their slots
         OnInventoryChanged?.Invoke();
+
         return true;
     }
 
@@ -102,8 +115,8 @@ public class InventorySystem : MonoBehaviour
         {
             items.Remove(item);
 
-            // Alert UI grid screens to redraw their slots
             OnInventoryChanged?.Invoke();
         }
     }
 }
+
