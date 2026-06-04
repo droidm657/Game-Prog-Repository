@@ -47,8 +47,13 @@ public class DeathPanelManager : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    public void RetryGame()
+public void RetryGame()
     {
+        if (InventorySystem.Instance != null)
+        {
+            InventorySystem.Instance.ResetForRetry();
+        }
+
         Time.timeScale = 1f;
 
         SceneManager.LoadScene("Interior Castle Scene");
@@ -58,11 +63,13 @@ public class DeathPanelManager : MonoBehaviour
     {
         if (InventorySystem.Instance != null)
         {
-            InventorySystem.Instance.ResetInventory();
+            InventorySystem.Instance.ResetEverything();
         }
 
         Time.timeScale = 1f;
 
         SceneManager.LoadScene("MainMenuScene");
     }
+
+
 }

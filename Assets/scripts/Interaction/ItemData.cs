@@ -26,16 +26,14 @@ public class ItemData : ScriptableObject
     public bool isDiscardable = true;
 
     [Header("Death Settings")]
-    public bool keepOnDeath = false;
+    public bool keepOnRetry = false;
 
     public enum ItemType
     {
         Weapon,
         Ammo,
-        KeyItem, 
-        Consumable, 
-        Miscellaneous 
+        KeyItem,
+        Consumable,
+        Miscellaneous
     }
-    
-
 }

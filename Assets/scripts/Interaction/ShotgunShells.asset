@@ -25,3 +25,4 @@ MonoBehaviour:
   isConsumable: 0
   healthRestoreAmount: 0
   isDiscardable: 0
+  keepOnRetry: 1

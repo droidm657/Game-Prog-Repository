@@ -29,20 +29,31 @@ public class InventorySystem : MonoBehaviour
     }
 
     // NEW: Reset inventory on Retry/Menu
-    public void ResetInventory()
+public void ResetForRetry()
     {
         for (int i = items.Count - 1; i >= 0; i--)
         {
-            if (!items[i].keepOnDeath)
+            if (!items[i].keepOnRetry)
             {
                 items.RemoveAt(i);
             }
         }
 
-        Debug.Log("Inventory Reset");
+        Debug.Log("Retry Inventory Reset");
 
         OnInventoryChanged?.Invoke();
     }
+
+    public void ResetEverything()
+    {
+        items.Clear();
+
+        Debug.Log("Full Inventory Reset");
+
+        OnInventoryChanged?.Invoke();
+    }
+
+
 
     public void UseConsumableItem(ItemData consumableItem)
     {
